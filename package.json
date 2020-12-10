@@ -1,0 +1,19 @@
+{
+  "name": "webxr-assignment-mhdfadlyhasan",
+  "version": "1.0.0",
+  "description": "tugas webxr",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AVR-2020/webxr-assignment-mhdfadlyhasan.git"
+  },
+  "author": "mhd fadly hasan",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AVR-2020/webxr-assignment-mhdfadlyhasan/issues"
+  },
+  "homepage": "https://github.com/AVR-2020/webxr-assignment-mhdfadlyhasan#readme"
+}
