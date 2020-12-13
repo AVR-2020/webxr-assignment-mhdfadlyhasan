@@ -1,4 +1,21 @@
 const {sequelize,DataTypes} = require('./connect')
-
-
-module.exports = router
+const Status = sequelize.define('statuses', {
+    id: {
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
+      primaryKey: true
+    },
+    status_sender: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
+    content: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+  }, {
+  });
+  // `sequelize.define` also returns the model
+  console.log(Status === sequelize.models.Status? "created " : "za heck"); // true
+  Status.create({status_sender:1,content:"asdfasdf"})
+  module.exports = Status
