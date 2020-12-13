@@ -17,5 +17,5 @@ const Status = sequelize.define('statuses', {
   });
   // `sequelize.define` also returns the model
   console.log(Status === sequelize.models.Status? "created " : "za heck"); // true
-  Status.create({status_sender:1,content:"asdfasdf"})
+//   Status.create({status_sender:1,content:"asdfasdf"})
   module.exports = Status
