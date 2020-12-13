@@ -1,18 +1,19 @@
-//connect to postgresql
-const { Sequelize , DataTypes } = require('sequelize');
+// connect to postgresql
+const { Sequelize, DataTypes } = require('sequelize')
 require('dotenv').config()
-var connectionString = process.env.DATABASE_URL
+// eslint-disable-next-line no-undef
+const connectionString = process.env.DATABASE_URL
 const sequelize = new Sequelize(connectionString, {
-  define:{
+  define: {
     timestamps: false
   }
 })
 try {
-    sequelize.authenticate();
-    console.log('Connection has been established successfully.');
-  } catch (error) {
-    console.error('Unable to connect to the database:', error);
-  }
+  sequelize.authenticate()
+  console.log('Connection has been established successfully.')
+} catch (error) {
+  console.error('Unable to connect to the database:', error)
+}
 module.exports = {
   sequelize,
   DataTypes

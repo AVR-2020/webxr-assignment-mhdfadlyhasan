@@ -1,4 +1,4 @@
-var {router} = require('./index')
+const { router } = require('./index')
 router.get('/chat', function (req, res) {
   res.send('chat')
 })
