@@ -1,15 +1,12 @@
 const { router } = require('./index')
 const Status = require('../database/dbstatus')
 router.get('/status', function (req, res) {
-  const statusBaru = async function (req, res) {
-    try {
-      const result = await Status.findAll()
+  Status.findAll()
+    .then(result => {
       res.send(result)
-    } catch (error) {
+    }).catch(error => {
       res.send(error)
-    }
-  }
-  statusBaru(req, res)
+    })
 })
 
 router.post('/status', function (req, res) {
