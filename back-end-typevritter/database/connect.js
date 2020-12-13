@@ -2,7 +2,11 @@
 const { Sequelize , DataTypes } = require('sequelize');
 require('dotenv').config()
 var connectionString = process.env.DATABASE_URL
-const sequelize = new Sequelize(connectionString)
+const sequelize = new Sequelize(connectionString, {
+  define:{
+    timestamps: false
+  }
+})
 try {
     sequelize.authenticate();
     console.log('Connection has been established successfully.');
