@@ -1,1 +1,1 @@
-const {sequelize,DataTypes} = require('./connect')
+const { sequelize, DataTypes } = require('./connect')

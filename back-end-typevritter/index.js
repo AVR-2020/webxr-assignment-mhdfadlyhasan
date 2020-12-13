@@ -6,18 +6,20 @@ const Chat = require('./routes/chat')
 const Conversation = require('./routes/conversation')
 const Home = require('./routes/home')
 const Register = require('./routes/register')
+const Login = require('./routes/login')
 const express = require('express')
 const app = express()
 const port = 3000
 
-const routes = [
+const routes = [// not the best implementation, first entry is not used
   ['/', Home],
   ['/chat', Chat],
   ['/conversation', Conversation],
   ['/follow', Follow],
   ['/user', User],
   ['/status', Status],
-  ['/register', Register] // not the best implementation, first entry is not used
+  ['/register', Register],
+  ['/login', Login]
 ]
 routes.forEach(function (routes) {
 // basicly read left and right array, not the best implementation but good enuff
