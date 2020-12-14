@@ -1,4 +1,5 @@
 // node server
+const port = 3000
 const Status = require('./routes/status')
 const User = require('./routes/user')
 const Follow = require('./routes/follow')
@@ -9,8 +10,11 @@ const Register = require('./routes/register')
 const Login = require('./routes/login')
 const express = require('express')
 const app = express()
-const port = 3000
+const cookieParser = require('cookie-parser')
+const session = require('express-session')
 
+app.use(cookieParser())
+app.use(session({ secret: 'session key di proyek biar lucu' }))
 const routes = [// not the best implementation, first entry is not used
   ['/', Home],
   ['/chat', Chat],
