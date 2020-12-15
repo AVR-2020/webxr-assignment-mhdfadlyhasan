@@ -12,9 +12,12 @@ const express = require('express')
 const app = express()
 const cookieParser = require('cookie-parser')
 const session = require('express-session')
-
 app.use(cookieParser())
 app.use(session({ secret: 'session key di proyek biar lucu' }))
+const http = require('http').createServer(app)
+const io = require('socket.io')(http)
+const socketio = require('./utils')(io)
+
 const routes = [// not the best implementation, first entry is not used
   ['/', Home],
   ['/chat', Chat],
@@ -30,7 +33,11 @@ routes.forEach(function (routes) {
   app.use(routes[0], routes[1])
 })
 
+socketio.on('connection', (socket) => {
+  socket.emit('chat message', 'You\'re Connected')
+})
+
 /* Listen */
-app.listen(port, () => {
+http.listen(port, () => {
   console.log(`listening at http://localhost:${port}`)
 })
