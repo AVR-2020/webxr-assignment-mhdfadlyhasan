@@ -11,8 +11,8 @@ router.post('/follow', function (req, res) {
       to_follow_user: req.body.to_follow_user
     }
   }).then(result => {
-    const created = result[1] // result[1] is false if entry is exist
-    if (created) res.send('succesfully following')
+    // result[1] is false if entry is exist
+    if (result[1]) res.send('succesfully following')
     else res.send('Already following')
   })
 })

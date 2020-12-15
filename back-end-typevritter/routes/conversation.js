@@ -29,8 +29,8 @@ router.post('/conversation', function (req, res) {
       user_2: req.body.user_2
     }
   }).then(result => {
-    const created = result[1] // result[1] is false if entry is exist
-    if (created) res.send('succesfully creating')
+    // result[1] is false if entry is exist
+    if (result[1]) res.send('succesfully creating')
     else res.send('Already have new conversation')
   }).catch(function (error) {
     res.send(error)
