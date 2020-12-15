@@ -11,4 +11,4 @@ to run back-end server
 
 
 lumine biar semangat
-![alt text](https://i.pximg.net/img-master/img/2020/12/12/14/02/24/86248720_p0_master1200.jpg)
+![alt text](/front-end/lumine.jpg)
