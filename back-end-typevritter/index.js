@@ -16,7 +16,7 @@ app.use(cookieParser())
 app.use(session({ secret: 'session key di proyek biar lucu' }))
 const http = require('http').createServer(app)
 const io = require('socket.io')(http)
-const socketio = require('./utils')(io)
+const socketio = require('./socket')(io)
 
 const routes = [// not the best implementation, first entry is not used
   ['/', Home],
