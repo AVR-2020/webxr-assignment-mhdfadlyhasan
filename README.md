@@ -7,3 +7,8 @@ to run back-end server
 6. rename .env.example to .env
 7. fill the necessary data
 8. npm start
+
+
+
+lumine biar semangat
+![alt text](https://i.pximg.net/img-master/img/2020/12/12/14/02/24/86248720_p0_master1200.jpg)
