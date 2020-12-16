@@ -18,6 +18,9 @@ const http = require('http').createServer(app)
 const io = require('socket.io')(http)
 const socketio = require('./socket')(io)
 
+// set the view engine to ejs
+app.set('view engine', 'ejs')
+
 const routes = [// not the best implementation, first entry is not used
   ['/', Home],
   ['/chat', Chat],
