@@ -6,8 +6,6 @@ router.use(bodyParser.urlencoded({ extended: true }))
 // uncommment this is you start working the front-end, or if you figure out how to session in postman
 // not the best implementation, but it works!
 router.use(function loggedIn (req, res, next) {
-  console.log(req.originalUrl)
-  console.log(req.session.user)
   // monstrosity lol
   if (req.session.user == null && req.originalUrl === '/register') next()
   else if (req.session.user == null && req.originalUrl !== '/login') res.redirect('/login')
@@ -15,8 +13,10 @@ router.use(function loggedIn (req, res, next) {
   else next()
 })
 
-router.use(function timeLog (req, res, next) {
-  console.log('Time: ', Date.now())
+router.use((req, res, next) => {
+  if (req.cookies.user_sid && !req.session.user) {
+    res.clearCookie('user_sid')
+  }
   next()
 })
 exports.router = router

@@ -2,7 +2,6 @@ const { router } = require('./index')
 const User = require('../database/dbuser')
 
 router.get('/login', function (req, res) {
-  console.log(req.session.user)
   res.render('pages/login')
 })
 

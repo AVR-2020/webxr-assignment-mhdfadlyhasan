@@ -21,7 +21,11 @@ app.use(session({
   saveUninitialized: true
 }))
 const http = require('http').createServer(app)
-const io = require('socket.io')(http)
+const io = require('socket.io')(http, {
+  cors: {
+    origin: '*'
+  }
+})
 const socketio = require('./socket')(io)
 
 // set the view engine to ejs
@@ -42,9 +46,9 @@ routes.forEach(function (routes) {
   app.use(routes[0], routes[1])
 })
 
-socketio.on('connection', (socket) => {
-  socket.emit('chat message', 'You\'re Connected')
-})
+// socketio.on('connection', (socket) => {
+//   socket.emit('chat message', 'You\'re Connected')
+// })
 
 /* Listen */
 http.listen(port, () => {

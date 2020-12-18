@@ -14,6 +14,7 @@ router.get('/chat', function (req, res) {
       res.send(error)
     })
 })
+
 router.post('/chat', function (req, res) {
   console.log(req.body.content)
   Chat.create({
