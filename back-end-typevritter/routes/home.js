@@ -1,6 +1,8 @@
 const { router } = require('./index')
 const Status = require('../database/dbstatus')
-router.get('/', async function (req, res) {
+
+router.get('/home', async function (req, res) {
+  console.log(req.session.user)
   const result = await Status.findAll()
   res.render('pages/index', { status: result })
 })
