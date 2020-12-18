@@ -1,10 +1,8 @@
 const { router } = require('./index')
-
-router.get('/', function (req, res) {
-  res.render('pages/index')
-  // res.sendFile(path.join(__dirname, '/index.html'))
-
-  // try pug https://codeforgeek.com/render-html-file-expressjs/
+const Status = require('../database/dbstatus')
+router.get('/', async function (req, res) {
+  const result = await Status.findAll()
+  res.render('pages/index', { status: result })
 })
 
 router.get('/about', function (req, res) {

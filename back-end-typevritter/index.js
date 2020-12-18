@@ -12,15 +12,21 @@ const express = require('express')
 const app = express()
 const cookieParser = require('cookie-parser')
 const session = require('express-session')
+const path = require('path')
+app.use(express.static(path.join(__dirname, 'public')))
 app.use(cookieParser())
-app.use(session({ secret: 'session key di proyek biar lucu' }))
+app.use(session({
+  secret: 'session key di proyek biar lucu',
+  resave: true,
+  saveUninitialized: true
+}))
 const http = require('http').createServer(app)
 const io = require('socket.io')(http)
 const socketio = require('./socket')(io)
 
 // set the view engine to ejs
 app.set('view engine', 'ejs')
-
+app.set('views', path.join(__dirname, '/public/views'))
 const routes = [// not the best implementation, first entry is not used
   ['/', Home],
   ['/chat', Chat],

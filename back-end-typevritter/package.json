@@ -11,7 +11,7 @@
     "type": "git",
     "url": "git+https://github.com/AVR-2020/webxr-assignment-mhdfadlyhasan.git"
   },
-  "author": "mhd fadly hasan",
+  "author": "Mhd fadly hasan",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/AVR-2020/webxr-assignment-mhdfadlyhasan/issues"
@@ -24,6 +24,7 @@
     "ejs": "^3.1.5",
     "express": "^4.17.1",
     "express-session": "^1.17.1",
+    "path": "^0.12.7",
     "pg": "^8.5.1",
     "pg-hstore": "^2.3.3",
     "sequelize": "^6.3.5",
