@@ -8,8 +8,10 @@ router.use(bodyParser.urlencoded({ extended: true }))
 router.use(function loggedIn (req, res, next) {
   console.log(req.originalUrl)
   console.log(req.session.user)
-  if (req.session.user == null && req.originalUrl !== '/login') res.redirect('/login')
-  else if (req.session.user && req.originalUrl === '/login') res.redirect('/home')
+  // monstrosity lol
+  if (req.session.user == null && req.originalUrl === '/register') next()
+  else if (req.session.user == null && req.originalUrl !== '/login') res.redirect('/login')
+  else if (req.session.user && (req.originalUrl === '/login' || req.originalUrl === '/register')) res.redirect('/home')
   else next()
 })
 
