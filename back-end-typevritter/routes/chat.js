@@ -36,5 +36,3 @@ router.post('/chat', function (req, res) {
 })
 
 module.exports = router
-
-// select * from chats;

@@ -10,9 +10,3 @@ module.exports = function (io) {
     console.log('user disconnect')
   })
 }
-
-// insert into conversations (user_1,user_2) values (2,8);
-
-// select * from conversations;
-
-// select * from users;
