@@ -2,6 +2,10 @@ const { router } = require('./index')
 const Chat = require('../database/dbchat')
 
 router.get('/chat', function (req, res) {
+  res.render('pages/chat')
+})
+
+router.post('/get_chat', function (req, res) {
   Chat.findAll({
     where: {
       conversation: req.body.conversation
@@ -10,8 +14,11 @@ router.get('/chat', function (req, res) {
     .then(result => {
       if (result.length > 0) res.send(result)
       else res.send('Chat Empty!')
+      console.log('result')
     }).catch(error => {
+      console.log('Error')
       res.send(error)
+      console.log(error)
     })
 })
 
@@ -29,3 +36,5 @@ router.post('/chat', function (req, res) {
 })
 
 module.exports = router
+
+// select * from chats;

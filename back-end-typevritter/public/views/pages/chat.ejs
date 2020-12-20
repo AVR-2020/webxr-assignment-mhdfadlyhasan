@@ -1,16 +1,80 @@
 <!doctype html>
 <html>
   <%- include('../layout/header'); -%>
-  
-  <%if (chat) { %>
-    <% chat.forEach (function (contents){ i+=1 %> 
-      <!-- <a-box position="-1 0.5 <%=i %> " rotation="0 45 0" color="#4CC3D9"></a-box> -->
-  <% }) } %>
-  <!-- <a-scene id="page">
-    <a-sphere position="0 1.25 -5" radius="1.25" color="#EF2D5E"></a-sphere>
-    <a-cylinder position="1 0.75 -3" radius="0.5" height="1.5" color="#FFC65D"></a-cylinder>
-    <a-plane position="0 0 -4" rotation="-90 0 0" width="4" height="4" color="#7BC8A4"></a-plane>
+  <a-scene id="pages">
+    <a-camera >
+      <a-entity 
+        id="camera"
+        cursor
+        geometry="
+            primitive: box;
+            width: 0.2;
+            height: 0.2;
+            depth: 0.2;
+        "
+        material = "color: red;"
+        position="0 0 -3"
+        >
+      </a-entity>
+    </a-camera>
+    <a-text value = "bottom text" color="white" position="-3 0 -3"></a-text>
+    </a-text>
+    <!-- <a-entity id='3-chatpage'>
+      <a-plane id="3-chatbox" position="0 2 -2" rotation="0 0 0" width="4" height="4" color="#7BC8A4" >
+      </a-plane>
+      <a-text id='3-1' color="white" position="0 2 -1.9" value="yha ha ha"></a-text>
+    </a-entity> -->
     <a-sky color="black"></a-sky>
-  </a-scene> -->
+  </a-scene>
   <%- include('../layout/footer'); -%>
+  <script>
+  socket.on('direct chat', function (data) {
+    var [conversation_id, ...pesan] = data.split(":")
+    var camera = document.querySelector('#camera').getAttribute('position')
+    if(document.getElementById(conversation_id+'-chatbox')) {
+      //exist
+      var tree = document.getElementById(conversation_id+'-chatpage').childNodes; //find chat page child
+      var flag = 1
+      var lastChild = tree[tree.length - flag]// get last child
+      while (lastChild.id==undefined){
+        lastChild = tree[tree.length - flag]// get last child
+        flag+=1
+      }
+       
+      // exist, add new data in its box
+      var [_, id_baru] = lastChild.id.split('-')
+      id_baru = parseInt(id_baru)
+      var posisi=lastChild.getAttribute('position')
+      var shape = `<a-text id = '${conversation_id}-${id_baru+1}' value = '${pesan}' color="white" position="${posisi.x} ${posisi.y-0.2} ${posisi.z}"></a-text>`
+      console.log(shape)
+      $('#'+conversation_id+'-chatpage').append(shape)
+
+    }
+    else {
+       //it doesn't exist
+      var camera = document.querySelector('#camera').getAttribute('position')
+      const shape = `<a-entity id='${conversation_id}-chatpage'><a-plane id="${conversation_id}-chatbox" position="${camera.x} ${2+camera.y} ${camera.z}" rotation="0 0 0" width="4" height="4" color="#7BC8A4" ></a-plane> </a-entity>`
+      console.log(shape)
+      $('#pages').append(shape)
+      //get all data
+      axios.post('/get_chat', {
+        conversation: 3
+      }).then(result => {
+        console.log('not exist')
+        var i = 0
+        var amplifier = 0
+        result.data.forEach(element => {
+          var box = document.getElementById(conversation_id+'-chatbox').getAttribute('position')
+          var shape = `<a-text id='${conversation_id}-${i}' value = ${element.content} color="white" position=" ${box.x} ${box.y+amplifier} ${box.z+0.1}"></a-text>`
+          $('#'+conversation_id+'-chatpage').append(shape)
+          console.log(shape)
+          amplifier=amplifier-0.2
+          i++
+        });
+      }).catch(error => {
+        console.log(error)
+      })
+    }
+  })
+ </script>
 </html>
