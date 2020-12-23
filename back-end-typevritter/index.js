@@ -13,6 +13,13 @@ const app = express()
 const cookieParser = require('cookie-parser')
 const session = require('express-session')
 const path = require('path')
+
+// const fs =require('fs')
+// const dirCerfiticate = 'sslcert/'
+// const privateKey = fs.readFileSync(dirCerfiticate + '/server.key', 'utf8')
+// const certificate = fs.readFileSync(dirCerfiticate + '/server.crt', 'utf8')
+// const credentials = { key: privateKey, cert: certificate }
+
 app.use(express.static(path.join(__dirname, 'public')))
 app.use(cookieParser())
 app.use(session({
@@ -21,6 +28,7 @@ app.use(session({
   saveUninitialized: true
 }))
 const http = require('http').createServer(app)
+// const  httpsServer = https.createServer(credentials, app)
 const io = require('socket.io')(http, {
   cors: {
     origin: '*'
@@ -54,3 +62,7 @@ routes.forEach(function (routes) {
 http.listen(port, () => {
   console.log(`listening at http://localhost:${port}`)
 })
+
+// httpsServer.listen(port, () => {
+//   console.log(`listening at http://localhost:${port}`)
+// })
