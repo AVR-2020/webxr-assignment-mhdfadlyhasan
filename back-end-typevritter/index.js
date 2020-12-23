@@ -13,7 +13,8 @@ const app = express()
 const cookieParser = require('cookie-parser')
 const session = require('express-session')
 const path = require('path')
-
+const http = require('http')
+global.connectedUsers = []
 // const fs =require('fs')
 // const dirCerfiticate = 'sslcert/'
 // const privateKey = fs.readFileSync(dirCerfiticate + '/server.key', 'utf8')
@@ -27,14 +28,8 @@ app.use(session({
   resave: true,
   saveUninitialized: true
 }))
-const http = require('http').createServer(app)
+
 // const  httpsServer = https.createServer(credentials, app)
-const io = require('socket.io')(http, {
-  cors: {
-    origin: '*'
-  }
-})
-const socketio = require('./socket')(io)
 
 // set the view engine to ejs
 app.set('view engine', 'ejs')
@@ -53,13 +48,16 @@ routes.forEach(function (routes) {
 // basicly read left and right array, not the best implementation but good enuff
   app.use(routes[0], routes[1])
 })
+const HttpServer = http.createServer(app)
+const io = require('./utils/socket')(HttpServer)
 
+// console.log(io)
 // socketio.on('connection', (socket) => {
 //   socket.emit('chat message', 'You\'re Connected')
 // })
 
 /* Listen */
-http.listen(port, () => {
+HttpServer.listen(port, () => {
   console.log(`listening at http://localhost:${port}`)
 })
 

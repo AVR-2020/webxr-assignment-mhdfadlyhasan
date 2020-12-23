@@ -1,8 +1,7 @@
 const { router } = require('./index')
 const Chat = require('../database/dbchat')
-
 router.get('/chat', function (req, res) {
-  res.render('pages/chat')
+  res.render('pages/chat', { user_id: 3 })
 })
 
 router.post('/get_chat', function (req, res) {
@@ -23,11 +22,10 @@ router.post('/get_chat', function (req, res) {
 })
 
 router.post('/chat', function (req, res) {
-  console.log(req.body.content)
   Chat.create({
     conversation: req.body.conversation,
     content: req.body.content,
-    user_sender: req.body.user_sender
+    user_sender: req.session.user.id
   }).then(result => {
     res.send(result)
   }).catch(error => {

@@ -1,8 +1,9 @@
 
 <ul id="messages"></ul>
 <form action="">
-  <input id="m" autocomplete="off" /><button>Send</button>
+  <input id="m" autocomplete="off" /><button id="#button">Send</button>
 </form>
+
 
 <script>
   const socket = io.connect('localhost:3000')
@@ -10,12 +11,11 @@
     console.log('Connected')
     $('#page').show()
   })
-  socket.on('chat message', function (data) {
-    console.log(data)
-  })
+  // socket.on('chat message', function (data) {
+  //   console.log(data + 'in footer')
+  // })
   socket.on('disconnect', function () {
     console.log('dc')
     $('#page').hide()
   })
-
 </script>

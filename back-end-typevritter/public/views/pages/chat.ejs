@@ -19,7 +19,7 @@
     </a-camera>
     <a-text value = "bottom text" color="white" position="-3 0 -3"></a-text>
     </a-text>
-    <!-- <a-entity textarea='text: halo' id='${conversation_id}-chattext' position="0 2 -1" > </a-entity> -->
+    <a-entity textarea='text: halo' id='${conversation_id}-chattext' position="0 2 -1" > </a-entity>
     <a-entity id='3-chatpage'>
       <a-plane id="3-chatbox" position="0 2 -2" rotation="0 0 0" width="4" height="4" color="#7BC8A4" >
       </a-plane>
@@ -29,15 +29,44 @@
   </a-scene>
   <%- include('../layout/footer'); -%>
   <script>
-  socket.on('direct chat', function (data) {
-    var [conversation_id, ...pesan] = data.split(":")
+
+  const user_id = "<%=user_id%>"
+  
+  // socket.emit('send chat', {
+  //   msg: 'poggers',
+  //   sender_id: user_id,
+  //   receiver_id: receiver_id, //maybe... the receiver got from the server query
+  //   conversation_id: conversation_id
+  // })
+  $('button').on('click', function(e){
+    e.preventDefault()
+    console.log('click')
+    axios.post('/chat', {
+        conversation: 3,
+        content: 'poggers',
+    }).then(object => {
+      socket.emit('chat message' , {
+        msg: 'pesan',
+        sender_id: user_id,
+        receiver_id: 3, //maybe... the receiver got from the server query.....
+        conversation_id: 3,
+      })
+    })
+  });
+  socket.on('get message', function (data) {
+  console.table(data)
+  if(data.receiver_id == user_id)
+  {
+    var pesan = data.msg
+    const receiver_id = data.receiver_id
+    const conversation_id = data.conversation_id
     if(document.getElementById(conversation_id+'-chatpage')) {
       //exist
       const chatText = document.getElementById(conversation_id+'-chattext')
       $(`#${conversation_id}-chattext`).attr('value', $(`#${conversation_id}-chattext`).attr('value') + '\n' + pesan)
     }
     else {
-       //it doesn't exist
+      //it doesn't exist
       var camera = document.querySelector('#camera').getAttribute('position')
       const shape = `<a-entity id='${conversation_id}-chatpage'>` + 
         `<a-plane id="${conversation_id}-chatbox" position="${camera.x} ${2+camera.y} ${camera.z}" rotation="0 0 0" width="4" height="4" color="#7BC8A4" ></a-plane> </a-entity>`
@@ -57,6 +86,12 @@
         console.log(error)
       })
     }
+  }
+    
+  })
+  
+  socket.on('direct chat', function (data) {
+    
   })
  </script>
 </html>
