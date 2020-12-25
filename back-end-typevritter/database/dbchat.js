@@ -1,13 +1,10 @@
 const { sequelize, DataTypes } = require('./connect')
+const User = require('./dbuser')
 const Chat = sequelize.define('chat', {
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
     primaryKey: true
-  },
-  user_sender: {
-    type: DataTypes.INTEGER,
-    allowNull: false
   },
   content: {
     type: DataTypes.STRING,
@@ -18,5 +15,13 @@ const Chat = sequelize.define('chat', {
     allowNull: false
   }
 }, {})
+
+User.hasMany(Chat, {
+  foreignKey: 'user_sender'
+})
+Chat.belongsTo(User, {
+  foreignKey: 'id'
+})
+
 console.log(Chat === sequelize.models.Chat ? 'created ' : 'za heck') // true
 module.exports = Chat

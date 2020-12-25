@@ -1,5 +1,6 @@
 const { router } = require('./index')
 const Chat = require('../database/dbchat')
+
 router.get('/chat', function (req, res) {
   res.render('pages/chat', { user_id: 3 })
 })
@@ -11,6 +12,7 @@ router.post('/get_chat', function (req, res) {
     }
   })
     .then(result => {
+      console.log(result)
       if (result.length > 0) res.send(result)
       else res.send('Chat Empty!')
       console.log('result')
@@ -32,5 +34,4 @@ router.post('/chat', function (req, res) {
     res.send(error)
   })
 })
-
 module.exports = router

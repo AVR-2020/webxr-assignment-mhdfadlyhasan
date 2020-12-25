@@ -19,12 +19,12 @@
     </a-camera>
     <a-text value = "bottom text" color="white" position="-3 0 -3"></a-text>
     </a-text>
-    <a-entity textarea='text: halo' id='${conversation_id}-chattext' position="0 2 -1" > </a-entity>
+    <!-- <a-entity textarea='text: halo' id='${conversation_id}-chattext' position="0 2 -1" > </a-entity>
     <a-entity id='3-chatpage'>
       <a-plane id="3-chatbox" position="0 2 -2" rotation="0 0 0" width="4" height="4" color="#7BC8A4" >
       </a-plane>
       <a-text id='3-chattext' color="white" position="0 2 -1.9" value="yha ha ha"></a-text>
-    </a-entity>
+    </a-entity> -->
     <a-sky color="black"></a-sky>
   </a-scene>
   <%- include('../layout/footer'); -%>
@@ -38,12 +38,11 @@
   //   receiver_id: receiver_id, //maybe... the receiver got from the server query
   //   conversation_id: conversation_id
   // })
-  $('button').on('click', function(e){
+  $('#buttons').on('click', function(e){
     e.preventDefault()
-    console.log('click')
     axios.post('/chat', {
         conversation: 3,
-        content: 'poggers',
+        content: 'pesan',
     }).then(object => {
       socket.emit('chat message' , {
         msg: 'pesan',

@@ -2,14 +2,41 @@
 <html>
   <%- include('../layout/header'); -%>
   <a-scene id="page">
-    <% var i = 2; if (status) { %>
-      <% status.forEach (function (contents){ i+=1 %> 
-        <a-box position="-1 0.5 <%=i %> " rotation="0 45 0" color="#4CC3D9"></a-box>
-    <% }) } %>
-    <a-sphere position="0 1.25 -5" radius="1.25" color="#EF2D5E"></a-sphere>
-    <a-cylinder position="1 0.75 -3" radius="0.5" height="1.5" color="#FFC65D"></a-cylinder>
-    <a-plane position="0 0 -4" rotation="-90 0 0" width="4" height="4" color="#7BC8A4"></a-plane>
+
+    <a-entity id="wall_content">
+      <% var i = 0; if (statuses) { %>
+        <% statuses.forEach (function (status){ i+=1 %> 
+        <a-text id="<%status.id%>-status"position="0 <%=i*0.2 %> -2" color="#4CC3D9" value="<%=status.content%>"></a-text>
+      <% }) } %>
+    </a-entity>
     <a-sky color="black"></a-sky>
   </a-scene>
   <%- include('../layout/footer'); -%>
+  <!-- https://jesstelford.github.io/aframe-click-drag-component/basic/ -->
 </html>
+<script>
+  const user_id = "<%=id_sender%>"
+  function refreshStatus() {
+    axios.get('/get_status')
+    .then(object => {
+      var text = ''
+      var i = 1
+      $('#wall_content').empty()
+      object.data.forEach (function (status){
+        console.log(status)
+        $('#wall_content').append(`<a-text id="${status.id}-status" position="0 ${i*0.2} -2" color="#4CC3D9" value="${status.content}"></a-text>`)
+        i+=1
+      })
+    })
+  }
+  $('#buttons').on('click', function(e){
+    e.preventDefault()
+    const content = $('#textarea-any').val()
+    console.log(content)
+    axios.post('status', {
+      content: content
+    })
+    $('#textarea-any').val('')
+    refreshStatus()
+  });
+</script>
