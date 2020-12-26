@@ -19,78 +19,66 @@
     </a-camera>
     <a-text value = "bottom text" color="white" position="-3 0 -3"></a-text>
     </a-text>
-    <!-- <a-entity textarea='text: halo' id='${conversation_id}-chattext' position="0 2 -1" > </a-entity>
-    <a-entity id='3-chatpage'>
-      <a-plane id="3-chatbox" position="0 2 -2" rotation="0 0 0" width="4" height="4" color="#7BC8A4" >
-      </a-plane>
-      <a-text id='3-chattext' color="white" position="0 2 -1.9" value="yha ha ha"></a-text>
-    </a-entity> -->
     <a-sky color="black"></a-sky>
   </a-scene>
   <%- include('../layout/footer'); -%>
   <script>
 
   const user_id = "<%=user_id%>"
-  
-  // socket.emit('send chat', {
-  //   msg: 'poggers',
-  //   sender_id: user_id,
-  //   receiver_id: receiver_id, //maybe... the receiver got from the server query
-  //   conversation_id: conversation_id
-  // })
+  const name = "<%=name%>"
+  const receiver_id = 8
+  console.log(user_id)
   $('#buttons').on('click', function(e){
     e.preventDefault()
+    const conversation_id = 3
+    const pesan = $('#textarea-any').val()
     axios.post('/chat', {
         conversation: 3,
-        content: 'pesan',
+        content: pesan,
     }).then(object => {
       socket.emit('chat message' , {
-        msg: 'pesan',
+        msg: pesan,
         sender_id: user_id,
-        receiver_id: 3, //maybe... the receiver got from the server query.....
-        conversation_id: 3,
+        receiver_id: receiver_id, //maybe... the receiver got from the server query.....
+        conversation_id: conversation_id,
+        name: name
       })
     })
   });
   socket.on('get message', function (data) {
-  console.table(data)
   if(data.receiver_id == user_id)
-  {
-    var pesan = data.msg
-    const receiver_id = data.receiver_id
-    const conversation_id = data.conversation_id
-    if(document.getElementById(conversation_id+'-chatpage')) {
-      //exist
-      const chatText = document.getElementById(conversation_id+'-chattext')
-      $(`#${conversation_id}-chattext`).attr('value', $(`#${conversation_id}-chattext`).attr('value') + '\n' + pesan)
-    }
-    else {
-      //it doesn't exist
-      var camera = document.querySelector('#camera').getAttribute('position')
-      const shape = `<a-entity id='${conversation_id}-chatpage'>` + 
-        `<a-plane id="${conversation_id}-chatbox" position="${camera.x} ${2+camera.y} ${camera.z}" rotation="0 0 0" width="4" height="4" color="#7BC8A4" ></a-plane> </a-entity>`
-      $('#pages').append(shape)
-      axios.post('/get_chat', {
-        conversation: 3
-      }).then(result => {
-        var pesan = ''
-        result.data.forEach(element => {
-          pesan += `${element.content}\n`
+    {
+      var pesan = `${data.name}: ${data.msg}`
+      const receiver_id = data.receiver_id
+      const conversation_id = data.conversation_id
+      if(document.getElementById(conversation_id+'-chatpage')) {
+        //exist
+        const chatText = document.getElementById(conversation_id+'-chattext')
+        $(`#${conversation_id}-chattext`).attr('value', $(`#${conversation_id}-chattext`).attr('value') + pesan + '\n' )
+      }
+      else {
+        //it doesn't exist
+        var camera = document.querySelector('#camera').getAttribute('position')
+        const shape = `<a-entity id='${conversation_id}-chatpage'>` + 
+          `<a-plane id="${conversation_id}-chatbox" position="${camera.x} ${2+camera.y} ${camera.z}" rotation="0 0 0" width="4" height="4" color="#7BC8A4" ></a-plane> </a-entity>`
+        $('#pages').append(shape)
+        axios.post('/get_chat', {
+          conversation: 3
+        }).then(result => {
+          console.log(result.data)
+          var pesan = ''
+          result.data.forEach(element => {
+            pesan += `${element.user.name}: ${element.content}\n`
+          })
+          const box = document.getElementById(`${conversation_id}-chatbox`).getAttribute('position')
+          const chatText = `<a-text id='${conversation_id}-chattext' value ='${pesan}' color="white" position=" ${box.x} ${box.y} ${box.z} " > </a-text> `
+          console.log(chatText)
+          $(`#${conversation_id}-chatpage`).append(chatText)
+        }).catch(error => {
+          console.log(error)
         })
-        const box = document.getElementById(`${conversation_id}-chatbox`).getAttribute('position')
-        const chatText = `<a-text id='${conversation_id}-chattext' value ='${pesan}' color="white" position=" ${box.x} ${box.y} ${box.z} " > </a-text> `
-        console.log(chatText)
-        $(`#${conversation_id}-chatpage`).append(chatText)
-      }).catch(error => {
-        console.log(error)
-      })
-    }
-  }
-    
-  })
-  
-  socket.on('direct chat', function (data) {
-    
+      }
+    }  
   })
  </script>
 </html>

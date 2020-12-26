@@ -1,18 +1,24 @@
 const { router } = require('./index')
 const Chat = require('../database/dbchat')
-
+const User = require('../database/dbuser')
 router.get('/chat', function (req, res) {
-  res.render('pages/chat', { user_id: 3 })
+  res.render('pages/chat', {
+    user_id: req.session.user.id, name: req.session.user.name
+  })
 })
 
 router.post('/get_chat', function (req, res) {
   Chat.findAll({
     where: {
       conversation: req.body.conversation
-    }
+    },
+    include: [
+      {
+        model: User
+      }
+    ]
   })
     .then(result => {
-      console.log(result)
       if (result.length > 0) res.send(result)
       else res.send('Chat Empty!')
       console.log('result')

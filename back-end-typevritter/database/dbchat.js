@@ -17,10 +17,10 @@ const Chat = sequelize.define('chat', {
 }, {})
 
 User.hasMany(Chat, {
-  foreignKey: 'user_sender'
+  foreignKey: 'id'
 })
 Chat.belongsTo(User, {
-  foreignKey: 'id'
+  foreignKey: 'user_sender'
 })
 
 console.log(Chat === sequelize.models.Chat ? 'created ' : 'za heck') // true

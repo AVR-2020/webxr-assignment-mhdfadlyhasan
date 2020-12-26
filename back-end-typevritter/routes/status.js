@@ -1,18 +1,30 @@
 const { router } = require('./index')
 const Status = require('../database/dbstatus')
+const User = require('../database/dbuser')
 router.get('/get_status', function (req, res) {
-  Status.findAll()
+  Status.findAll({
+    include: [
+      {
+        model: User
+      }
+    ]
+  })
     .then(result => {
       res.send(result)
     }).catch(error => {
       res.send(error)
     })
 })
-
 router.get('/status', function (req, res) {
-  Status.findAll()
+  Status.findAll({
+    include: [
+      {
+        model: User
+      }
+    ]
+  })
     .then(result => {
-      res.render('pages/status', { statuses: result, id_sender: req.session.user.id })
+      res.render('pages/status', { statuses: result, user_id: req.session.user.id })
     }).catch(error => {
       res.send(error)
     })

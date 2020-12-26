@@ -11,7 +11,8 @@ module.exports = function get (http) {
         msg: data.msg,
         sender_id: data.id,
         receiver_id: data.receiver_id,
-        conversation_id: data.conversation_id
+        conversation_id: data.conversation_id,
+        name: data.name
       })
     })
     socket.on('disconnect', (socket) => {

@@ -2,11 +2,13 @@
 <html>
   <%- include('../layout/header'); -%>
   <a-scene id="page">
-
     <a-entity id="wall_content">
       <% var i = 0; if (statuses) { %>
         <% statuses.forEach (function (status){ i+=1 %> 
-        <a-text id="<%status.id%>-status"position="0 <%=i*0.2 %> -2" color="#4CC3D9" value="<%=status.content%>"></a-text>
+          <a-entity id="<%status.id%>-status">
+            <a-text id="<%status.id%>-headerstatus" position="-1 <%=i*0.2 %> -2" color="#4CC3D9" value="<%=status.user.name%>"></a-text>
+            <a-text id="<%status.id%>-statuscontent" position="0 <%=i*0.2 %> -2" color="#4CC3D9" value="<%=status.content%>"></a-text>
+        </a-entity>
       <% }) } %>
     </a-entity>
     <a-sky color="black"></a-sky>
@@ -15,7 +17,7 @@
   <!-- https://jesstelford.github.io/aframe-click-drag-component/basic/ -->
 </html>
 <script>
-  const user_id = "<%=id_sender%>"
+  const user_id = "<%=user_id%>"
   function refreshStatus() {
     axios.get('/get_status')
     .then(object => {
@@ -23,8 +25,12 @@
       var i = 1
       $('#wall_content').empty()
       object.data.forEach (function (status){
-        console.log(status)
-        $('#wall_content').append(`<a-text id="${status.id}-status" position="0 ${i*0.2} -2" color="#4CC3D9" value="${status.content}"></a-text>`)
+        $('#wall_content').append(
+          `<a-entity id=${status.id}-status>` +
+            `<a-text id="${status.id}-headerstatus" position="-1 ${i*0.2} -2" color="#4CC3D9" value="${status.user.name}"></a-text>` + 
+            `<a-text id="${status.id}-statuscontent" position="0 ${i*0.2} -2" color="#4CC3D9" value="${status.content}"></a-text>` + 
+          `</a-entity>`
+          )
         i+=1
       })
     })
@@ -32,7 +38,6 @@
   $('#buttons').on('click', function(e){
     e.preventDefault()
     const content = $('#textarea-any').val()
-    console.log(content)
     axios.post('status', {
       content: content
     })

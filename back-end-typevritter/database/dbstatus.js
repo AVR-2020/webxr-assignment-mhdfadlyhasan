@@ -1,6 +1,5 @@
 const { sequelize, DataTypes } = require('./connect')
 const User = require('./dbuser')
-
 const Status = sequelize.define('statuses', {
   id: {
     type: DataTypes.INTEGER,
@@ -12,12 +11,11 @@ const Status = sequelize.define('statuses', {
     allowNull: false
   }
 }, {})
-console.log(User)
 User.hasMany(Status, {
-  foreignKey: 'status_sender'
+  foreignKey: 'id'
 })
 Status.belongsTo(User, {
-  foreignKey: 'id'
+  foreignKey: 'status_sender'
 })
 // `sequelize.define` also returns the model
 console.log(Status === sequelize.models.Status ? 'created ' : 'za heck') // true
