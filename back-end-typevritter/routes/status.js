@@ -37,4 +37,17 @@ router.post('/status', function (req, res) {
     res.send('error')
   }
 })
+
+router.post('/del_status', function (req, res) {
+  try {
+    Status.destroy({
+      where: {
+        id: req.body.id_status
+      }
+    })
+    res.send('success')
+  } catch (error) {
+    res.send('error')
+  }
+})
 module.exports = router

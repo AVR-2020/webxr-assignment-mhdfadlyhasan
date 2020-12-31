@@ -1,19 +1,33 @@
-<title>TypeVritter</title>
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
-<!-- <script src="https://unpkg.com/aframe-textarea-component/dist/aframe-textarea-component.min.js"></script> -->
-<script src="/socket.io/socket.io.js"></script>
+<head>
+  <title>TypeVritter</title>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
+  
+  <script src="https://unpkg.com/aframe-look-at-component@0.8.0/dist/aframe-look-at-component.min.js"></script>
+  <script src="//cdn.rawgit.com/donmccurdy/aframe-physics-system/v4.0.1/dist/aframe-physics-system.min.js"></script>
+  <script src="https://unpkg.com/aframe-text-geometry-component@^0.5.0/dist/aframe-text-geometry-component.min.js"></script> 
+  
 
-<style type="text/css" data-href=""> </style>
-<style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font: 13px Helvetica, Arial; }
-  form { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
-  form input { border: 0; padding: 10px; width: 90%; margin-right: 0.5%; }
-  form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
-  #messages { list-style-type: none; margin: 0; padding: 0; }
-  #messages li { padding: 5px 10px; }
-  #messages li:nth-child(odd) { background: #eee; }
-</style>
+  <!-- <script src="https://unpkg.com/aframe-textarea-component/dist/aframe-textarea-component.min.js"></script> -->
 
+  <!-- https://jesstelford.github.io/aframe-click-drag-component/basic/ -->
+  <!-- <script src="https://unpkg.com/aframe-click-drag-component/dist/aframe-textarea-component.min.js"></script>  -->
+  <!-- <script>
+    registerAframeClickDragComponent(window.AFRAME);
+  </script> -->
+  
+  <script src="/socket.io/socket.io.js"></script>
+
+  <style type="text/css" data-href=""> </style>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font: 13px Helvetica, Arial; }
+    form { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
+    form input { border: 0; padding: 10px; width: 90%; margin-right: 0.5%; }
+    form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
+    #messages { list-style-type: none; margin: 0; padding: 0; }
+    #messages li { padding: 5px 10px; }
+    #messages li:nth-child(odd) { background: #eee; }
+  </style>
+</head>

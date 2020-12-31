@@ -1,20 +1,98 @@
 <!doctype html>
 <html>
   <%- include('../layout/header'); -%>
-  <a-scene id="page">
-    <a-entity id="wall_content">
+  <script>
+    var setint  = '';
+    AFRAME.registerComponent('tong-sampah', {
+      init: function () {
+        
+        this.el.addEventListener('collide', function (evt) {
+          var id_status = evt.detail.body.el.getAttribute('id_status')
+          $('#'+evt.detail.body.el.getAttribute('id_status')+'-statuscontent').remove();
+          axios.post('/del_status', {
+            id_status: id_status
+          })
+          .then(object => {
+            if(object.data == 'success') {
+              console.log('Deleted')
+            }
+          })
+        });
+      }
+    });
+    AFRAME.registerComponent('kotak-status', {
+      init: function () {
+        console.log('init status box')
+        var self =  this.el
+          this.el.addEventListener('mousedown',function(e) {
+            var player = document.getElementById("a-cam")
+            var self = this
+            clearInterval(setint);
+            e.target.removeAttribute('dynamic-body')
+            setint = setInterval(function () {
+                var positon = player.getAttribute('position')
+                $('#'+self.id).attr("position", `${positon.x} ${positon.y} ${positon.z-0.2}`);
+            },50);
+          });
+          
+          this.el.addEventListener('mouseup',function(e) {
+            clearInterval(setint);
+            var atribute = document.createAttribute("dynamic-body")
+            e.target.setAttributeNode(atribute)
+          });
+      }
+    });
+  </script>
+  <a-scene id="page" physics="debug: true">
+    <a-assets>
+      <a-asset-item id="tongsampah" src="../assets/scene.gltf"></a-asset-item>
+    </a-assets>
+
+    <a-camera id="a-cam">
+      <a-entity 
+        raycaster = "objects: #kotak, .clickable;"
+        cursor = "rayOrigin: mouse"
+        >
+        <a-entity 
+          id="camera"
+          geometry="
+          primitive: box;
+          width: 0.2;
+          height: 0.2;
+          depth: 0.2;"
+        >
+        </a-entity>
+      </a-entity>
+    </a-camera>
+
+    <a-entity id="wall_content" >
       <% var i = 0; if (statuses) { %>
         <% statuses.forEach (function (status){ i+=1 %> 
-          <a-entity id="<%status.id%>-status">
-            <a-text id="<%status.id%>-headerstatus" position="-1 <%=i*0.2 %> -2" color="#4CC3D9" value="<%=status.user.name%>"></a-text>
-            <a-text id="<%status.id%>-statuscontent" position="0 <%=i*0.2 %> -2" color="#4CC3D9" value="<%=status.content%>"></a-text>
-        </a-entity>
+          <a-entity kotak-status 
+            id_status="<%= status.id %>"
+            <% if(status.user.id == user_id) { %>
+                class="clickable"
+              <% } %>
+            sender="<%=status.user.id%>" id="<%=status.id%>-statuscontent" 
+            <% if(status.user.id == user_id) { %>
+              material = "color:green"
+            
+            <% }else {%> 
+              material = "color:blue"
+            <% } %> 
+             geometry="primitive: plane;height:0.2; width:2;" position="0 <%=i*0.2 %> -2" color="#4CC3D9" text="color:white; align: center; value:<%=status.user.name%> <%=status.content%>;" ></a-entity>
       <% }) } %>
     </a-entity>
+    
+    <a-entity class="clickable" kotak-status text-geometry="value: What's up" position="0 10 -1"></a-entity>
+    <!-- geometry="primitive: box;"  -->
+    <a-plane static-body rotation="-90 0 0" height="20" width="20w" position="0 0 -1"></a-plane>
+    <a-box kotak-status id="kotak" position="0 1 -1" color="#4CC3D9"></a-box>
     <a-sky color="black"></a-sky>
+    <a-entity id="tempatsampah" tong-sampah static-body class="clickable" gltf-model="#tongsampah" scale= "0.1 0.1 0.1" position="3 0 -1.5"></a-entity>
   </a-scene>
   <%- include('../layout/footer'); -%>
-  <!-- https://jesstelford.github.io/aframe-click-drag-component/basic/ -->
+  
 </html>
 <script>
   const user_id = "<%=user_id%>"
@@ -26,9 +104,10 @@
       $('#wall_content').empty()
       object.data.forEach (function (status){
         $('#wall_content').append(
-          `<a-entity id=${status.id}-status>` +
-            `<a-text id="${status.id}-headerstatus" position="-1 ${i*0.2} -2" color="#4CC3D9" value="${status.user.name}"></a-text>` + 
-            `<a-text id="${status.id}-statuscontent" position="0 ${i*0.2} -2" color="#4CC3D9" value="${status.content}"></a-text>` + 
+          `<a-entity kotak-status ${status.user.id == user_id ? 'class="clickable"': ''}` +
+            `sender="${status.user.id}" id_status=${status.id} id="${status.id}-statuscontent"` + 
+            `${status.user.id == user_id ? 'material = "color:green"' : 'material = "color:blue"'}` +
+            `geometry="primitive: plane;height:0.2; width:2;" position="0 ${i*0.2} -2" text="color:white; align: center; value:${status.user.name} ${status.content};">` +
           `</a-entity>`
           )
         i+=1
@@ -44,4 +123,28 @@
     $('#textarea-any').val('')
     refreshStatus()
   });
+  $(document).ready(function() {
+    console.log('ready')
+  });
+  document.querySelector('#tempatsampah').addEventListener('collide', function (evt) {
+    
+  });
+  
+  document.querySelector('#kotak').addEventListener('click', function (evt) {
+    console.log('This 2D element was clicked!');
+    console.log(evt.target.getAttribute('position'))
+  });
+  // var c = document.querySelectorAll('[sender="1"]')
+  // c[0].addEventListener('click', function (evt) {
+  //   console.log('This 2D element was clicked!');
+  //   console.log(evt.target.getAttribute('position'))
+  // });
+
+  // console.table(c)
+  // document.querySelector('.njir').addEventListener('click', function (evt) {
+  //   console.log('This 2D element was clicked!');
+  //   console.log(evt.target.getAttribute('position'))
+  // });
+
+
 </script>

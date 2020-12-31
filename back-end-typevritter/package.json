@@ -18,6 +18,8 @@
   },
   "homepage": "https://github.com/AVR-2020/webxr-assignment-mhdfadlyhasan#readme",
   "dependencies": {
+    "aframe": "^1.1.0",
+    "aframe-click-drag-component": "^3.0.1",
     "body-parser": "^1.19.0",
     "cookie-parser": "^1.4.5",
     "dotenv": "^8.2.0",

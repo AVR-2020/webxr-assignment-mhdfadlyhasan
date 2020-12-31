@@ -35,22 +35,22 @@ app.use(session({
 app.set('view engine', 'ejs')
 app.set('views', path.join(__dirname, '/public/views'))
 const routes = [// not the best implementation, first entry is not used
-  ['/', Home],
-  ['/chat', Chat],
-  ['/conversation', Conversation],
-  ['/follow', Follow],
-  ['/user', User],
-  ['/status', Status],
-  ['/register', Register],
-  ['/login', Login]
+  Home,
+  Chat,
+  Conversation,
+  Follow,
+  User,
+  Status,
+  Register,
+  Login
 ]
-routes.forEach(function (routes) {
-// basicly read left and right array, not the best implementation but good enuff
-  app.use(routes[0], routes[1])
-})
+app.use(routes)
+
 const HttpServer = http.createServer(app)
 const io = require('./utils/socket')(HttpServer)
 
+// import aframe from 'aframe';
+// import registerClickDrag from 'aframe-click-drag-component';
 // console.log(io)
 // socketio.on('connection', (socket) => {
 //   socket.emit('chat message', 'You\'re Connected')
@@ -60,7 +60,6 @@ const io = require('./utils/socket')(HttpServer)
 HttpServer.listen(port, () => {
   console.log(`listening at http://localhost:${port}`)
 })
-
 // httpsServer.listen(port, () => {
 //   console.log(`listening at http://localhost:${port}`)
 // })
