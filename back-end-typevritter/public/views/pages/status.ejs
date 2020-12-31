@@ -24,7 +24,7 @@
         console.log('init status box')
         var self =  this.el
           this.el.addEventListener('mousedown',function(e) {
-            var player = document.getElementById("a-cam")
+            var player = document.getElementById("camera")
             var self = this
             clearInterval(setint);
             e.target.removeAttribute('dynamic-body')
@@ -59,7 +59,7 @@
       <a-asset-item id="tongsampah" src="../assets/scene.gltf"></a-asset-item>
     </a-assets>
 
-    <a-camera id="a-cam">
+    <a-camera id="camera">
       <a-entity 
         raycaster = "objects: #kotak, .clickable;"
         cursor = "rayOrigin: mouse"
@@ -69,6 +69,11 @@
     </a-camera>
     
     <a-entity id="wall_content" >
+    <!-- better implementation -->
+    <!-- <a-entity position="0 2 -1">
+      <a-box class="clickable" add-user-button width="1" height="0.2" depth="0.2"></a-box>
+      <a-text text="value: User; align:center " position="0 0 0.1" color="black"></a-text>
+    </a-entity> -->
       <% var i = 0; if (statuses) { %>
         <% statuses.forEach (function (status){ i+=1 %> 
           <a-entity kotak-status 
@@ -83,7 +88,7 @@
             <% }else {%> 
               material = "color:blue"
             <% } %> 
-             geometry="primitive: plane;height:0.2; width:2;" position="0 <%=i*0.2 %> -2" color="#4CC3D9" text="color:white; align: center; value:<%=status.user.name%> <%=status.content%>;" ></a-entity>
+             geometry="primitive: plane;height:0.2; width:2;" position="0 <%=i*0.3 %> -2" color="#4CC3D9" text="color:white; align: center; value:<%=status.user.name%> <%=status.content%>;" ></a-entity>
       <% }) } %>
     </a-entity>
     

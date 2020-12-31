@@ -1,0 +1,82 @@
+<!doctype html>
+<html>
+  <%- include('../layout/header'); -%>
+  <script>
+    AFRAME.registerComponent('search-user-button', {
+      init: function () {
+        this.el.addEventListener('click',function(e) {
+            const name = document.getElementById('conversation-searchuser').components.textarea.textarea.value
+            axios.post('/user', {
+              name: name
+            }).then(result=> {
+              console.table(result.data)
+              refreshSearch(result.data)
+            })
+        });
+      }
+    });
+
+    AFRAME.registerComponent('add-user-button', {
+      init: function () {
+        this.el.addEventListener('click',function(e) {
+            var id_penerima = e.target.getAttribute('user_id')
+            axios.post('/conversation', {
+              user_1: user_id,
+              user_2: id_penerima
+            }).then(result=> {
+              console.log(result.data)
+              // spawnChat()
+            })
+        });
+      }
+    });
+  </script>
+  <a-scene id="page">
+    <a-camera id="camera">
+      <a-entity 
+        raycaster = "objects: .clickable;"
+        cursor = "rayOrigin: mouse"
+        >
+        </a-entity>
+      </a-entity>
+    </a-camera>
+    
+    <a-entity id="search_wall" >
+    </a-entity>
+    
+    <a-entity class="clickable" id="title" text-geometry="value: Conversation" position="-1 2 -3"></a-entity>
+    <a-sky color="black"></a-sky>
+    <a-entity position="2 2 -1.9">
+      <a-box class="clickable" search-user-button  color="yellow" position="1 0 -0.7"> </a-box>
+      <a-entity id="conversation-searchuser" textarea="backgroundColor: blue; color: white" class="clickable" geometry="primitive:plane;" material="color: blue"></a-entity>
+      <a-text class="clickable" text="value: Search" position="0.7 0 -0.2"></a-text>
+    </a-entity>
+  </a-scene>
+  <%- include('../layout/footer'); -%>
+</html>
+
+<script>
+  const user_id = "<%=user_id%>"
+  function refreshSearch(result) {
+      var text = ''
+      var i = 1
+      $('#search_wall').empty()
+      if(result.length>0){
+        result.forEach (function (result){
+          if(result.id != user_id)
+          $('#search_wall').append(
+            `<a-entity position="0 ${i*0.3} -1">`+
+              `<a-box id="${result.id}-result" user_id="${result.id}" class="clickable" add-user-button width="1" height="0.2" depth="0.2"></a-box>` +
+              ` <a-text text="value: ${result.name}; align:center " position="0 0 0.1" color="black"></a-text>` +
+            `</a-entity>`
+            )
+          i+=1
+        })
+      }
+      else {
+        $('#search_wall').append('<a-text text="value: Not Found!" position="0.7 2 -0.2"></a-text>')
+      }
+      
+  }
+
+</script>

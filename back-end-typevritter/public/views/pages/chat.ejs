@@ -2,19 +2,12 @@
 <html>
   <%- include('../layout/header'); -%>
   <a-scene id="pages">
-    <a-camera >
+    <a-camera id="camera">
       <a-entity 
-        id="camera"
-        cursor
-        geometry="
-            primitive: box;
-            width: 0.2;
-            height: 0.2;
-            depth: 0.2;
-        "
-        material = "color: red;"
-        position="0 0 -3"
+        raycaster = "objects: #kotak, .clickable;"
+        cursor = "rayOrigin: mouse"
         >
+        </a-entity>
       </a-entity>
     </a-camera>
     <a-text value = "bottom text" color="white" position="-3 0 -3"></a-text>
