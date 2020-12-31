@@ -5,7 +5,6 @@
     var setint  = '';
     AFRAME.registerComponent('tong-sampah', {
       init: function () {
-        
         this.el.addEventListener('collide', function (evt) {
           var id_status = evt.detail.body.el.getAttribute('id_status')
           $('#'+evt.detail.body.el.getAttribute('id_status')+'-statuscontent').remove();
@@ -42,6 +41,18 @@
           });
       }
     });
+    AFRAME.registerComponent('send-status-button', {
+      init: function () {
+          this.el.addEventListener('click',function(e) {
+              const content = document.getElementById('status-textarea').components.textarea.textarea.value
+              axios.post('status', {
+                content: content
+              })
+              document.getElementById('status-textarea').components.textarea.textarea.value = ''
+              refreshStatus()
+          });
+      }
+    });
   </script>
   <a-scene id="page" physics="debug: true">
     <a-assets>
@@ -53,18 +64,10 @@
         raycaster = "objects: #kotak, .clickable;"
         cursor = "rayOrigin: mouse"
         >
-        <a-entity 
-          id="camera"
-          geometry="
-          primitive: box;
-          width: 0.2;
-          height: 0.2;
-          depth: 0.2;"
-        >
         </a-entity>
       </a-entity>
     </a-camera>
-
+    
     <a-entity id="wall_content" >
       <% var i = 0; if (statuses) { %>
         <% statuses.forEach (function (status){ i+=1 %> 
@@ -84,15 +87,25 @@
       <% }) } %>
     </a-entity>
     
-    <a-entity class="clickable" kotak-status text-geometry="value: What's up" position="0 10 -1"></a-entity>
-    <!-- geometry="primitive: box;"  -->
+    <a-entity class="clickable" id="title" kotak-status text-geometry="value: What's up" position="0 2 -1"></a-entity>
+    <a-gui-flex-container 
+      flex-direction="column" justify-content="center" align-items="normal" component-padding="0.1" opacity="0.7" width="3.5" height="4.5"
+      position="2 2.5 -4" rotation="0 0 0"
+    >
+    </a-gui-flex-container>
+
     <a-plane static-body rotation="-90 0 0" height="20" width="20w" position="0 0 -1"></a-plane>
     <a-box kotak-status id="kotak" position="0 1 -1" color="#4CC3D9"></a-box>
     <a-sky color="black"></a-sky>
+    
+    <a-entity position="2 2 -1.9">
+      <a-box class="clickable" send-status-button  color="yellow" position="1 0 -0.7"> </a-box>
+      <a-entity id="status-textarea" textarea="backgroundColor: blue; color: white" class="clickable" geometry="primitive:plane;" material="color: blue"></a-entity>
+      <a-text class="clickable" text="value: Send" position="0.7 0 -0.2"></a-text>
+    </a-entity>
     <a-entity id="tempatsampah" tong-sampah static-body class="clickable" gltf-model="#tongsampah" scale= "0.1 0.1 0.1" position="3 0 -1.5"></a-entity>
   </a-scene>
   <%- include('../layout/footer'); -%>
-  
 </html>
 <script>
   const user_id = "<%=user_id%>"
@@ -116,12 +129,7 @@
   }
   $('#buttons').on('click', function(e){
     e.preventDefault()
-    const content = $('#textarea-any').val()
-    axios.post('status', {
-      content: content
-    })
-    $('#textarea-any').val('')
-    refreshStatus()
+    
   });
   $(document).ready(function() {
     console.log('ready')
@@ -134,17 +142,5 @@
     console.log('This 2D element was clicked!');
     console.log(evt.target.getAttribute('position'))
   });
-  // var c = document.querySelectorAll('[sender="1"]')
-  // c[0].addEventListener('click', function (evt) {
-  //   console.log('This 2D element was clicked!');
-  //   console.log(evt.target.getAttribute('position'))
-  // });
-
-  // console.table(c)
-  // document.querySelector('.njir').addEventListener('click', function (evt) {
-  //   console.log('This 2D element was clicked!');
-  //   console.log(evt.target.getAttribute('position'))
-  // });
-
 
 </script>
