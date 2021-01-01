@@ -1,34 +1,20 @@
-<a-entity id="status" rotation="0 0 0" position="-1 0 0">
+<a-entity id="status" rotation="0 0 0" position="0 0 -0.456">
   <a-entity id="wall_content" >
     <% var i = 0; if (statuses) { %>
       <% statuses.forEach (function (status){ i+=1 %> 
-        <a-entity kotak-status 
-          id_status="<%= status.id %>"
-          <% if(status.user.id == user_id) { %>
-              class="clickable"
-            <% } %>
-          sender="<%=status.user.id%>" id="<%=status.id%>-statuscontent" 
-          <% if(status.user.id == user_id) { %>
-            material = "color:green"
-          
-          <% }else {%> 
-            material = "color:blue"
-          <% } %> 
-            geometry="primitive: plane;height:0.2; width:2;" position="0 <%=i*0.3 %> -2" color="#4CC3D9" text="color:white; align: center; value:<%=status.user.name%> <%=status.content%>;">
-          </a-entity>
+        <a-entity kotak-status id_status="<%= status.id %>" <% if(status.user.id == user_id) { %> class="clickable"<% } %> sender="<%=status.user.id%>" id="<%=status.id%>-statuscontent" <% if(status.user.id == user_id) { %> material = "color:green"<% }else {%> material = "color:blue" <% } %> geometry="primitive: plane;height:0.2; width:2;" position="0 <%=i*0.3 %> -2" color="#4CC3D9" text="color:white; align: center; value:<%=status.user.name%> <%=status.content%>;"> </a-entity>
     <% }) } %>
   </a-entity>
-  <a-entity class="clickable" id="title" kotak-status text-geometry="value: What's up" position="0 2 -1"></a-entity>
-  <a-plane static-body rotation="-90 0 0" height="20" width="20" position="0 0 -1"></a-plane>
-  
+  <!-- <a-plane position="-3.8797 3.08843 -2.182" ></a-plane> -->
+  <a-entity glow id="title-status" kotak-status="" text-geometry="value: What's up;" material="color: #ff6600; shader: flat" position="-4.5 3.08843 -2.182" velocity=""></a-entity>
   <a-entity position="2 2 -1.9">
-    <a-box class="clickable" send-status-button  color="yellow" position="1 0 -0.7"> </a-box>
-    <a-entity id="status-textarea" textarea="backgroundColor: blue; color: white" class="clickable" geometry="primitive:plane;" material="color: blue"></a-entity>
-    <a-text class="clickable" text="value: Send" position="0.7 0 -0.2"></a-text>
+    
+    <a-box class="clickable" send-status-button="" color="yellow" position="1 0 -0.32911" material="" geometry="height:0.4; depth: 0.1"> </a-box>
+    <a-entity id="status-textarea" textarea="backgroundColor: blue; color: white; cols: 20; rows: 4; " position="0 0 -0.3" class="clickable"  geometry="primitive:plane;height:0.3; width:0.9" material="color: blue;"></a-entity>
+    <a-text id="send-text" text="value: Send" position="0.73414 0 -0.27689"></a-text>
   </a-entity>
   <a-entity id="tempatsampah" tong-sampah static-body class="clickable" gltf-model="#tongsampah" scale= "0.1 0.1 0.1" position="3 0 -1.5"></a-entity>
 </a-entity>
-
 <script>
   function refreshStatus() {
     axios.get('/get_status')
@@ -39,7 +25,7 @@
       object.data.forEach (function (status){
         $('#wall_content').append(
           `<a-entity kotak-status ${status.user.id == user_id ? 'class="clickable"': ''}` +
-            `sender="${status.user.id}" id_status=${status.id} id="${status.id}-statuscontent"` + 
+          `sender="${status.user.id}" id_status=${status.id} id="${status.id}-statuscontent"` + 
             `${status.user.id == user_id ? 'material = "color:green"' : 'material = "color:blue"'}` +
             `geometry="primitive: plane;height:0.2; width:2;" position="0 ${i*0.3} -2" text="color:white; align: center; value:${status.user.name} ${status.content};">` +
           `</a-entity>`
@@ -56,3 +42,4 @@
     console.log('ready')
   });
 </script>
+

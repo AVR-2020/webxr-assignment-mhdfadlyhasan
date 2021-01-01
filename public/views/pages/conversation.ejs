@@ -1,5 +1,5 @@
-<a-entity position="1 0 0" rotation="0 -90 0">
-  <a-entity id="conversation_wall" >
+<a-entity position="4.43285 1.47088 0" rotation="0 -90 0" id="conversation">
+  <a-entity id="conversation_wall" position="-0.13949 -0.71838 0">
     <% var i = 0; if (conversations) { %>
       <% conversations.forEach (function (conversation){ i+=1 %> 
         <a-entity kotak-conversation 
@@ -15,31 +15,32 @@
           "
           id="<%=conversation.id%>-conversation" 
           material="color:green"
-          geometry="primitive: plane;height:0.2; width:2;" 
-          position="0 <%=i*0.3 %> -2" color="#4CC3D9" 
-          text="color:white; align: center; value:
-            <%if (conversation.user1.id == user_id){%>
-              <%=conversation.user2.name%> 
-            <% } else {%>
-              <%=conversation.user1.name%> 
-            <%}  %> 
-          " >
+          geometry="primitive: box; height:0.2; width:2; depth:0.1;" 
+          position="0 <%=i*0.3 %> 0" color="#4CC3D9" 
+          >
         </a-entity>
+        <a-text
+        text="color:white; align: center; value:
+          <%if (conversation.user1.id == user_id){%>
+            <%=conversation.user2.name%> 
+          <% } else {%>
+            <%=conversation.user1.name%> 
+          <%}  %> 
+        "
+        position="0 <%=i*0.3 %> 0.05">
+      </a-text>
       <% }) } %>
   </a-entity>
-  <a-entity class="clickable" id="title" text-geometry="value: Conversation"position="-1 2 -3"></a-entity>
-  <a-sky color="black"></a-sky>
-  <a-entity id="search_conversation" position="2 2 -1.9">
-    <a-box class="clickable" search-user-button  color="yellow" position="1 0 -0.7"> </a-box>
-    <a-entity id="conversation-searchuser" textarea="backgroundColor: blue; color: white" class="clickable" geometry="primitive:plane;" material="color: blue"></a-entity>
-    <a-text class="clickable" text="value: Search" position="0.7 0 -0.2"></a-text>
+  <a-entity class="clickable" id="title" text-geometry="value: Conversation" position="-1 2 0" material="color:yellow; shader: flat"></a-entity>
+  <a-entity id="search_conversation" position="1.572 0.33592 0">
+    <a-box class="clickable" search-user-button="" color="yellow" position="1 0 -0.1" material=""  geometry="height:0.4; depth: 0.1" > </a-box>
+    <a-entity id="conversation-searchuser" textarea="backgroundColor: blue; color: white;cols: 20; rows: 4;" class="clickable"  geometry="primitive:plane;height:0.3; width:0.9" material="color: blue"  position="0 0 -0.1"></a-entity>
+    <a-text class="clickable" text="value: Search; align: center" position="1 0 0"></a-text>
   </a-entity>
 </a-entity>
 
 <script>
-  // spawnChat(15)
   const user_id = "<%=user_id%>"
-  console.log('<%=conversations%>')
   function refreshSearch(result) {
       var text = ''
       var i = 1
@@ -47,17 +48,19 @@
       if(result.length>0){
         result.forEach (function (result){
           if(result.id != user_id)
-          $('#conversation_wall').append(
-            `<a-entity position="0 ${i*0.3} -1">`+
+          {
+            $('#conversation_wall').append(
+            `<a-entity position="0 ${i*0.3} 0">`+
               `<a-box id="${result.id}-result" user_id="${result.id}" class="clickable" add-user-button width="1" height="0.2" depth="0.2"></a-box>` +
               ` <a-text text="value: ${result.name}; align:center " position="0 0 0.1" color="black"></a-text>` +
             `</a-entity>`
             )
-          i+=1
+            i+=1
+          }
         })
       }
       else {
-        $('#conversation_wall').append('<a-text text="value: Not Found!" ></a-text>')
+        $('#conversation_wall').append('<a-text text="value: Ini Found!" ></a-text>')
       }
   }
 </script>

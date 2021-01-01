@@ -30,11 +30,11 @@
       var id_penerima = conversation.user_1 == user_id ? conversation.user_2 : conversation.user_1
       var camera = document.querySelector('#camera').getAttribute('position')
       const shape = 
-      `<a-entity id='${conversation_id}-chatpage' kotak-chat geometry="primitive: plane" class="clickable" material="color: #7BC8A4" position="${camera.x} ${camera.y} ${camera.z-3}"> ` + 
+      `<a-entity id='${conversation_id}-chatpage' look-at="#camera" kotak-chat geometry="primitive: plane" class="clickable" material="color: #7BC8A4" position="${camera.x} ${camera.y} ${camera.z-3}"> ` + 
         `<a-plane id="${conversation_id}-chatbox"` + 
-        `width="3" height="2" color="#7BC8A4" ></a-plane>` +
-        `<a-entity id="${conversation_id}-input" textarea="backgroundColor: blue; color: white" class="clickable" geometry="primitive:plane;" material="color: blue" position="0 -1.7 0" rotation="-30 0 0"></a-entity>` +
-        `<a-entity id="${conversation_id}-submit" conversation_id='${conversation_id}' user_penerima='${id_penerima}' class="clickable" geometry="primitive:plane;" material="color: green" submit-chat position="1.2 -1.7 0" rotation="-30 0 0"></a-entity >` +
+        `width="2" height="1" color="#7BC8A4" ></a-plane>` +
+        `<a-entity id="${conversation_id}-input" textarea="backgroundColor: blue; color: white; cols: 20; rows: 4;" class="clickable" geometry="primitive:plane;height:0.3; width:0.9" material="color: blue" position="0 -1 0" rotation="-30 0 0"></a-entity>` +
+        `<a-entity id="${conversation_id}-submit"conversation_id='${conversation_id}' user_penerima='${id_penerima}' class="clickable" geometry="primitive:plane;height:0.3; width:0.9" material="color: green" submit-chat position="1.2 -1 0" rotation="-30 0 0"></a-entity >` +
         `</a-entity>`
       $('#pages').append(shape)
       axios.post('/get_chat', {
@@ -45,33 +45,12 @@
           pesan += `${element.user.name}: ${element.content}\n`
         })
         const chatText = 
-        `<a-text id='${conversation_id}-chattext' value ='${pesan}' align="center" position ='0 0 0.1' color="white" > </a-text> `
+        `<a-text id='${conversation_id}-chattext' value ='${pesan}' align="center" position ='0 0 0.2' color="white" > </a-text> `
         $(`#${conversation_id}-chatpage`).append(chatText)
       }).catch(error => {
         console.log(error)
       })
     })
-  }
-  
-  function refreshSearch(result) {
-      var text = ''
-      var i = 1
-      $('#conversation_wall').empty()
-      if(result.length>0){
-        result.forEach (function (result){
-          if(result.id != user_id)
-          $('#conversation_wall').append(
-            `<a-entity position="0 ${i*0.3} -1">`+
-              `<a-box id="${result.id}-result" user_id="${result.id}" class="clickable" add-user-button width="1" height="0.2" depth="0.2"></a-box>` +
-              ` <a-text text="value: ${result.name}; align:center " position="0 0 0.1" color="black"></a-text>` +
-            `</a-entity>`
-            )
-          i+=1
-        })
-      }
-      else {
-        $('#conversation_wall').append('<a-text text="value: Not Found!" ></a-text>')
-      }
   }
   
  </script>

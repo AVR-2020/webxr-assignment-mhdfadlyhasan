@@ -2,6 +2,7 @@
   <%- include('../layout/header'); -%>
   <a-scene id="pages">
     <a-assets>
+      <img id="jalan" src="../assets/texture-jalan.jpg">
       <a-asset-item id="tongsampah" src="../assets/scene.gltf"></a-asset-item>
     </a-assets>
     <a-camera id="camera">
@@ -15,5 +16,14 @@
     <%- include('./conversation'); -%>
     <%- include('./chat'); -%>
     <%- include('./status'); -%>
+    <a-plane material="src: #jalan;repeat:100 100; shader: flat" static-body rotation="-90 0 0" height="100" width="100" position="0 0 6.14603"></a-plane>
+    <a-box material="src: #jalan;repeat:2 2;"geometry="height: 5; width: 100" id="dinding" position="-5.31659 2.66083 -3.187" material=""></a-box>
+    <a-box material="src: #jalan;repeat:2 2;"geometry="height: 5; width: 100" id="dinding-4" position="5.15503 2.66083 0.43671" rotation="0 -90 0"></a-box>
+    <a-box material="src: #jalan;repeat:2 2;" geometry="height: 100; width: 100;" id="dinding-6" position="-2.90418 5.95246 5.64194" rotation="90 0 0" material=""></a-box>
+    <a-sky color="black"></a-sky>
+    <a-light type="point" light="color: #0ef8f8" position="0 5 0" ></a-light>
+    <!-- <a-box light="color: #ffff; type: point" position="0 2 0 "></a-box> -->
+    <a-light type="ambient" color="#ffffff" intensity="0"></a-light>
+    <a-light type="directional" light="color: #039595" position="0 5 0"></a-light>
   </a-scene>
 </html>
