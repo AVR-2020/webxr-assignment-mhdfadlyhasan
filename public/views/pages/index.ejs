@@ -1,0 +1,19 @@
+<html>
+  <%- include('../layout/header'); -%>
+  <a-scene id="pages">
+    <a-assets>
+      <a-asset-item id="tongsampah" src="../assets/scene.gltf"></a-asset-item>
+    </a-assets>
+    <a-camera id="camera">
+      <a-entity 
+        raycaster = "objects: #kotak, .clickable;"
+        cursor = "rayOrigin: mouse"
+        >
+        </a-entity>
+    </a-camera>    
+    <%- include('../layout/footer'); -%>
+    <%- include('./conversation'); -%>
+    <%- include('./chat'); -%>
+    <%- include('./status'); -%>
+  </a-scene>
+</html>

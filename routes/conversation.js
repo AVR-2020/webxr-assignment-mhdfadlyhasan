@@ -1,34 +1,6 @@
 const { router } = require('./index')
 const { Op } = require('sequelize')
 const Conversation = require('../database/dbconversation')
-const User = require('../database/dbuser')
-router.get('/conversation', function (req, res) {
-  Conversation.findAll({
-    include: [
-      {
-        model: User,
-        as: 'user1'
-      },
-      {
-        model: User,
-        as: 'user2'
-      }
-    ],
-    where: {
-      [Op.or]: [
-        { user_1: req.session.user.id },
-        { user_2: req.session.user.id }
-      ]
-    }
-  }).then(function (object) {
-    // if (object.length > 0) res.send(object)
-    // else res.send('Conversation is empty!')
-    console.log(object[0])
-    res.render('pages/conversation', { user_id: req.session.user.id, conversations: object })
-  }).catch(function (error) {
-    res.send(error)
-  })
-})
 
 router.get('/all_conversation', function (req, res) {
   console.log(req.session.user.id)

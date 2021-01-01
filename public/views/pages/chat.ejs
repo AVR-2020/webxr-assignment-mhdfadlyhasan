@@ -1,58 +1,10 @@
-<!doctype html>
-<html>
-  <%- include('../layout/header'); -%>
-  
-  <script>
-    AFRAME.registerComponent('submit-chat', {
-      init: function () {
-        this.el.addEventListener('click',function(e) {
-            const id_conversation = e.target.getAttribute('conversation_id')  
-            var pesan = document.getElementById(`${id_conversation}-input`).components.textarea.textarea.value
-            const id_penerima = e.target.getAttribute('user_penerima')
-            axios.post('/chat', {
-                conversation: id_conversation,
-                content: pesan,
-            }).then(object => {
-              socket.emit('chat message' , {
-                msg: pesan,
-                sender_id: user_id,
-                receiver_id: id_penerima,
-                conversation_id: id_conversation,
-                name: name
-              })
-              document.getElementById(`${id_conversation}-input`).components.textarea.textarea.value = ''
-            })
-        });
-      }
-    });
-  </script>
+<a-text value = "bottom text" color="white" position="-3 0 -3"></a-text>
 
-  <a-scene id="pages">
-    <a-camera id="camera">
-      <a-entity 
-        raycaster = "objects: #kotak, .clickable;"
-        cursor = "rayOrigin: mouse"
-        >
-        </a-entity>
-      </a-entity>
-    </a-camera>
-    <a-text value = "bottom text" color="white" position="-3 0 -3"></a-text>
-    </a-text>
-    <a-entity>
-
-    </a-entity>
-    <a-sky color="black"></a-sky>
-  </a-scene>
-  <%- include('../layout/footer'); -%>
-  <script>
-
-  const user_id = "<%=user_id%>"
+<script>
   const name = "<%=name%>"
-  const receiver_id = 8
   console.log(user_id)  
   $('#buttons').on('click', function(e){
     e.preventDefault()
-    
   });
   socket.on('get message', function (data) {
     var pesan = `${data.name}: ${data.msg}`
@@ -67,7 +19,6 @@
       spawnChat(conversation_id)
     }
   })
-  spawnChat(15)
   function spawnChat(conversation_id){
     //get penerima disini
     console.log(conversation_id)
@@ -83,7 +34,7 @@
         `<a-plane id="${conversation_id}-chatbox"` + 
         `width="3" height="2" color="#7BC8A4" ></a-plane>` +
         `<a-entity id="${conversation_id}-input" textarea="backgroundColor: blue; color: white" class="clickable" geometry="primitive:plane;" material="color: blue" position="0 -1.7 0" rotation="-30 0 0"></a-entity>` +
-        `<a-entity id="${conversation_id}-submit" conversation_id='${conversation_id}' user_penerima='${id_penerima}' class="clickable" geometry="primitive:plane;" material="color: green" submit-chat position="1 -1.7 0" rotation="-30 0 0"></a-entity >` +
+        `<a-entity id="${conversation_id}-submit" conversation_id='${conversation_id}' user_penerima='${id_penerima}' class="clickable" geometry="primitive:plane;" material="color: green" submit-chat position="1.2 -1.7 0" rotation="-30 0 0"></a-entity >` +
         `</a-entity>`
       $('#pages').append(shape)
       axios.post('/get_chat', {
@@ -101,7 +52,26 @@
       })
     })
   }
+  
+  function refreshSearch(result) {
+      var text = ''
+      var i = 1
+      $('#conversation_wall').empty()
+      if(result.length>0){
+        result.forEach (function (result){
+          if(result.id != user_id)
+          $('#conversation_wall').append(
+            `<a-entity position="0 ${i*0.3} -1">`+
+              `<a-box id="${result.id}-result" user_id="${result.id}" class="clickable" add-user-button width="1" height="0.2" depth="0.2"></a-box>` +
+              ` <a-text text="value: ${result.name}; align:center " position="0 0 0.1" color="black"></a-text>` +
+            `</a-entity>`
+            )
+          i+=1
+        })
+      }
+      else {
+        $('#conversation_wall').append('<a-text text="value: Not Found!" ></a-text>')
+      }
+  }
+  
  </script>
-</html>
-
-delete from chats;

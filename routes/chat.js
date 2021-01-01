@@ -1,9 +1,33 @@
 const { router } = require('./index')
 const Chat = require('../database/dbchat')
 const User = require('../database/dbuser')
-router.get('/chat', function (req, res) {
+const { Op } = require('sequelize')
+const Conversation = require('../database/dbconversation')
+router.get('/chat', async function (req, res) {
+  const object = await Conversation.findAll({
+    include: [
+      {
+        model: User,
+        as: 'user1'
+      },
+      {
+        model: User,
+        as: 'user2'
+      }
+    ],
+    where: {
+      [Op.or]: [
+        { user_1: req.session.user.id },
+        { user_2: req.session.user.id }
+      ]
+    }
+  }).then(function (object) {
+    return object
+  })
   res.render('pages/chat', {
-    user_id: req.session.user.id, name: req.session.user.name
+    conversations: object,
+    user_id: req.session.user.id,
+    name: req.session.user.name
   })
 })
 
