@@ -1,6 +1,32 @@
 <!doctype html>
 <html>
   <%- include('../layout/header'); -%>
+  
+  <script>
+    AFRAME.registerComponent('submit-chat', {
+      init: function () {
+        this.el.addEventListener('click',function(e) {
+            const id_conversation = e.target.getAttribute('conversation_id')  
+            var pesan = document.getElementById(`${id_conversation}-input`).components.textarea.textarea.value
+            const id_penerima = e.target.getAttribute('user_penerima')
+            axios.post('/chat', {
+                conversation: id_conversation,
+                content: pesan,
+            }).then(object => {
+              socket.emit('chat message' , {
+                msg: pesan,
+                sender_id: user_id,
+                receiver_id: id_penerima,
+                conversation_id: id_conversation,
+                name: name
+              })
+              document.getElementById(`${id_conversation}-input`).components.textarea.textarea.value = ''
+            })
+        });
+      }
+    });
+  </script>
+
   <a-scene id="pages">
     <a-camera id="camera">
       <a-entity 
@@ -12,6 +38,9 @@
     </a-camera>
     <a-text value = "bottom text" color="white" position="-3 0 -3"></a-text>
     </a-text>
+    <a-entity>
+
+    </a-entity>
     <a-sky color="black"></a-sky>
   </a-scene>
   <%- include('../layout/footer'); -%>
@@ -20,58 +49,59 @@
   const user_id = "<%=user_id%>"
   const name = "<%=name%>"
   const receiver_id = 8
-  console.log(user_id)
+  console.log(user_id)  
   $('#buttons').on('click', function(e){
     e.preventDefault()
-    const conversation_id = 3
-    const pesan = $('#textarea-any').val()
-    axios.post('/chat', {
-        conversation: 3,
-        content: pesan,
-    }).then(object => {
-      socket.emit('chat message' , {
-        msg: pesan,
-        sender_id: user_id,
-        receiver_id: receiver_id, //maybe... the receiver got from the server query.....
-        conversation_id: conversation_id,
-        name: name
-      })
-    })
+    
   });
   socket.on('get message', function (data) {
-  if(data.receiver_id == user_id)
-    {
-      var pesan = `${data.name}: ${data.msg}`
-      const receiver_id = data.receiver_id
-      const conversation_id = data.conversation_id
-      if(document.getElementById(conversation_id+'-chatpage')) {
-        //exist
-        const chatText = document.getElementById(conversation_id+'-chattext')
-        $(`#${conversation_id}-chattext`).attr('value', $(`#${conversation_id}-chattext`).attr('value') + pesan + '\n' )
-      }
-      else {
-        //it doesn't exist
-        var camera = document.querySelector('#camera').getAttribute('position')
-        const shape = `<a-entity id='${conversation_id}-chatpage'>` + 
-          `<a-plane id="${conversation_id}-chatbox" position="${camera.x} ${2+camera.y} ${camera.z}" rotation="0 0 0" width="4" height="4" color="#7BC8A4" ></a-plane> </a-entity>`
-        $('#pages').append(shape)
-        axios.post('/get_chat', {
-          conversation: 3
-        }).then(result => {
-          console.log(result.data)
-          var pesan = ''
-          result.data.forEach(element => {
-            pesan += `${element.user.name}: ${element.content}\n`
-          })
-          const box = document.getElementById(`${conversation_id}-chatbox`).getAttribute('position')
-          const chatText = `<a-text id='${conversation_id}-chattext' value ='${pesan}' color="white" position=" ${box.x} ${box.y} ${box.z} " > </a-text> `
-          console.log(chatText)
-          $(`#${conversation_id}-chatpage`).append(chatText)
-        }).catch(error => {
-          console.log(error)
-        })
-      }
-    }  
+    var pesan = `${data.name}: ${data.msg}`
+    const receiver_id = data.receiver_id
+    const conversation_id = data.conversation_id
+    if(document.getElementById(conversation_id+'-chatpage')) {
+      //exist
+      const chatText = document.getElementById(conversation_id+'-chattext')
+      $(`#${conversation_id}-chattext`).attr('value', $(`#${conversation_id}-chattext`).attr('value') + pesan + '\n' )
+    }
+    else {
+      spawnChat(conversation_id)
+    }
   })
+  spawnChat(15)
+  function spawnChat(conversation_id){
+    //get penerima disini
+    console.log(conversation_id)
+    axios.post('/detail_conversation', {
+      conversation: conversation_id
+    }).then(conversation => {
+      var conversation = conversation.data[0]
+      var conversation_id = conversation.id
+      var id_penerima = conversation.user_1 == user_id ? conversation.user_2 : conversation.user_1
+      var camera = document.querySelector('#camera').getAttribute('position')
+      const shape = 
+      `<a-entity id='${conversation_id}-chatpage' kotak-chat geometry="primitive: plane" class="clickable" material="color: #7BC8A4" position="${camera.x} ${camera.y} ${camera.z-3}"> ` + 
+        `<a-plane id="${conversation_id}-chatbox"` + 
+        `width="3" height="2" color="#7BC8A4" ></a-plane>` +
+        `<a-entity id="${conversation_id}-input" textarea="backgroundColor: blue; color: white" class="clickable" geometry="primitive:plane;" material="color: blue" position="0 -1.7 0" rotation="-30 0 0"></a-entity>` +
+        `<a-entity id="${conversation_id}-submit" conversation_id='${conversation_id}' user_penerima='${id_penerima}' class="clickable" geometry="primitive:plane;" material="color: green" submit-chat position="1 -1.7 0" rotation="-30 0 0"></a-entity >` +
+        `</a-entity>`
+      $('#pages').append(shape)
+      axios.post('/get_chat', {
+        conversation: conversation_id
+      }).then(result => {
+        var pesan = ''
+        result.data.forEach(element => {
+          pesan += `${element.user.name}: ${element.content}\n`
+        })
+        const chatText = 
+        `<a-text id='${conversation_id}-chattext' value ='${pesan}' align="center" position ='0 0 0.1' color="white" > </a-text> `
+        $(`#${conversation_id}-chatpage`).append(chatText)
+      }).catch(error => {
+        console.log(error)
+      })
+    })
+  }
  </script>
 </html>
+
+delete from chats;

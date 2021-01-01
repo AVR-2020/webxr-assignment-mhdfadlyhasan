@@ -2,6 +2,7 @@
 <html>
   <%- include('../layout/header'); -%>
   <script>
+    var setint=""
     AFRAME.registerComponent('search-user-button', {
       init: function () {
         this.el.addEventListener('click',function(e) {
@@ -15,7 +16,6 @@
         });
       }
     });
-
     AFRAME.registerComponent('add-user-button', {
       init: function () {
         this.el.addEventListener('click',function(e) {
@@ -24,12 +24,39 @@
               user_1: user_id,
               user_2: id_penerima
             }).then(result=> {
-              console.log(result.data)
-              // spawnChat()
+              spawnChat(result.data[0].id)
             })
         });
       }
     });
+    
+    AFRAME.registerComponent('spawn-chat-button', {
+      init: function () {
+        this.el.addEventListener('click',function(e) {
+            var id_conversation = e.target.getAttribute('conversation_id')
+            spawnChat(id_conversation)
+        });
+      }
+    });
+    AFRAME.registerComponent('kotak-chat', {
+      init: function () {
+          this.el.addEventListener('mousedown',function(e) {
+          var self = this
+          var player = document.getElementById("camera")
+          clearInterval(setint);
+          setint = setInterval(function () {
+              console.log(self.id)
+              var positon = player.getAttribute('position')
+              $('#'+self.id).attr("position", `${positon.x} ${positon.y} ${positon.z-2}`);
+          },50);
+        });
+        
+        this.el.addEventListener('mouseup',function(e) {
+          clearInterval(setint);
+        });
+      }
+    });
+        
   </script>
   <a-scene id="page">
     <a-camera id="camera">
@@ -40,13 +67,37 @@
         </a-entity>
       </a-entity>
     </a-camera>
-    
-    <a-entity id="search_wall" >
+    <a-entity id="conversation_wall" position="0 0 0">
+      <% var i = 0; if (conversations) { %>
+        <% conversations.forEach (function (conversation){ i+=1 %> 
+          <a-entity kotak-conversation 
+            conversation_id="<%= conversation.id %>" 
+            class="clickable"
+            spawn-chat-button
+            nama_penerima="
+            <%if (conversation.user1.id == user_id){%>
+              <%=conversation.user2.name%> 
+            <% } else {%>
+              <%=conversation.user1.name%> 
+            <%}  %> 
+            "
+            id="<%=conversation.id%>-conversation" 
+            material="color:green"
+            geometry="primitive: plane;height:0.2; width:2;" 
+            position="0 <%=i*0.3 %> -2" color="#4CC3D9" 
+            text="color:white; align: center; value:
+              <%if (conversation.user1.id == user_id){%>
+                <%=conversation.user2.name%> 
+              <% } else {%>
+                <%=conversation.user1.name%> 
+              <%}  %> 
+            " >
+          </a-entity>
+        <% }) } %>
     </a-entity>
-    
-    <a-entity class="clickable" id="title" text-geometry="value: Conversation" position="-1 2 -3"></a-entity>
+    <a-entity class="clickable" id="title" text-geometry="value: Conversation"position="-1 2 -3"></a-entity>
     <a-sky color="black"></a-sky>
-    <a-entity position="2 2 -1.9">
+    <a-entity id="search_conversation" position="2 2 -1.9">
       <a-box class="clickable" search-user-button  color="yellow" position="1 0 -0.7"> </a-box>
       <a-entity id="conversation-searchuser" textarea="backgroundColor: blue; color: white" class="clickable" geometry="primitive:plane;" material="color: blue"></a-entity>
       <a-text class="clickable" text="value: Search" position="0.7 0 -0.2"></a-text>
@@ -56,15 +107,17 @@
 </html>
 
 <script>
+  // spawnChat(15)
   const user_id = "<%=user_id%>"
+  console.log('<%=conversations%>')
   function refreshSearch(result) {
       var text = ''
       var i = 1
-      $('#search_wall').empty()
+      $('#conversation_wall').empty()
       if(result.length>0){
         result.forEach (function (result){
           if(result.id != user_id)
-          $('#search_wall').append(
+          $('#conversation_wall').append(
             `<a-entity position="0 ${i*0.3} -1">`+
               `<a-box id="${result.id}-result" user_id="${result.id}" class="clickable" add-user-button width="1" height="0.2" depth="0.2"></a-box>` +
               ` <a-text text="value: ${result.name}; align:center " position="0 0 0.1" color="black"></a-text>` +
@@ -74,9 +127,42 @@
         })
       }
       else {
-        $('#search_wall').append('<a-text text="value: Not Found!" position="0.7 2 -0.2"></a-text>')
+        $('#conversation_wall').append('<a-text text="value: Not Found!" ></a-text>')
       }
-      
   }
 
+
+  function spawnChat(conversation_id){
+    //get penerima disini
+    console.log(conversation_id)
+    axios.post('/detail_conversation', {
+      conversation: conversation_id
+    }).then(conversation => {
+      var conversation = conversation.data[0]
+      var conversation_id = conversation.id
+      var id_penerima = conversation.user_1 == user_id ? conversation.user_2 : conversation.user_1
+      var camera = document.querySelector('#camera').getAttribute('position')
+      const shape = 
+      `<a-entity id='${conversation_id}-chatpage' kotak-chat geometry="primitive: plane" class="clickable" material="color: #7BC8A4" position="${camera.x} ${camera.y} ${camera.z-3}"> ` + 
+        `<a-plane id="${conversation_id}-chatbox"` + 
+        `width="3" height="2" color="#7BC8A4" ></a-plane>` +
+        `<a-entity id="${conversation_id}-input" textarea="backgroundColor: blue; color: white" class="clickable" geometry="primitive:plane;" material="color: blue" position="0 -1.7 0" rotation="-30 0 0"></a-entity>` +
+        `<a-entity id="${conversation_id}-submit" conversation_id='${conversation_id}' user_penerima='${id_penerima}' class="clickable" geometry="primitive:plane;" material="color: green" submit-chat position="1 -1.7 0" rotation="-30 0 0"></a-entity >` +
+        `</a-entity>`
+      $('#page').append(shape)
+      axios.post('/get_chat', {
+        conversation: conversation_id
+      }).then(result => {
+        var pesan = ''
+        result.data.forEach(element => {
+          pesan += `${element.user.name}: ${element.content}\n`
+        })
+        const chatText = 
+        `<a-text id='${conversation_id}-chattext' value ='${pesan}' align="center" position ='0 0 0.1' color="white" > </a-text> `
+        $(`#${conversation_id}-chatpage`).append(chatText)
+      }).catch(error => {
+        console.log(error)
+      })
+    })
+  }
 </script>

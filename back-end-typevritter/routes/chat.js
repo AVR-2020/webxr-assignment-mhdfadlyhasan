@@ -19,9 +19,7 @@ router.post('/get_chat', function (req, res) {
     ]
   })
     .then(result => {
-      if (result.length > 0) res.send(result)
-      else res.send('Chat Empty!')
-      console.log('result')
+      res.send(result)
     }).catch(error => {
       console.log('Error')
       res.send(error)

@@ -1,26 +1,64 @@
 const { router } = require('./index')
 const { Op } = require('sequelize')
 const Conversation = require('../database/dbconversation')
-
+const User = require('../database/dbuser')
 router.get('/conversation', function (req, res) {
-  res.render('pages/conversation', { user_id: req.session.user.id })
+  Conversation.findAll({
+    include: [
+      {
+        model: User,
+        as: 'user1'
+      },
+      {
+        model: User,
+        as: 'user2'
+      }
+    ],
+    where: {
+      [Op.or]: [
+        { user_1: req.session.user.id },
+        { user_2: req.session.user.id }
+      ]
+    }
+  }).then(function (object) {
+    // if (object.length > 0) res.send(object)
+    // else res.send('Conversation is empty!')
+    console.log(object[0])
+    res.render('pages/conversation', { user_id: req.session.user.id, conversations: object })
+  }).catch(function (error) {
+    res.send(error)
+  })
 })
-// router.get('/all_conversation', function (req, res) {
-//   console.log(req.session.user.id)
-//   Conversation.findAll({
-//     where: {
-//       [Op.or]: [
-//         { user_1: req.session.user.id },
-//         { user_2: req.session.user.id }
-//       ]
-//     }
-//   }).then(function (object) {
-//     if (object.length > 0) res.send(object)
-//     else res.send('Conversation is empty!')
-//   }).catch(function (error) {
-//     res.send(error)
-//   })
-// })
+
+router.get('/all_conversation', function (req, res) {
+  console.log(req.session.user.id)
+  Conversation.findAll({
+    where: {
+      [Op.or]: [
+        { user_1: req.session.user.id },
+        { user_2: req.session.user.id }
+      ]
+    }
+  }).then(function (object) {
+    if (object.length > 0) res.send(object)
+    else res.send('Conversation is empty!')
+  }).catch(function (error) {
+    res.send(error)
+  })
+})
+
+router.post('/detail_conversation', function (req, res) {
+  Conversation.findAll({
+    where: {
+      id: req.body.conversation
+    }
+  }).then(result => {
+    console.log(result)
+    res.send(result)
+  }).catch(function (error) {
+    res.send(error)
+  })
+})
 
 router.post('/conversation', function (req, res) {
   Conversation.findOrCreate({
@@ -45,13 +83,12 @@ router.post('/conversation', function (req, res) {
       user_2: req.body.user_2
     }
   }).then(result => {
-    // result[1] is false if entry is exist
-    if (result[1]) res.send('succesfully creating')
-    else res.send('Already have new conversation')
+    res.send(result)
   }).catch(function (error) {
     res.send(error)
   })
 })
+
 router.delete('/conversation', function (req, res) {
   Conversation.destroy({
     where: {
