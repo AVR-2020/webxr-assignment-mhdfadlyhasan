@@ -18,13 +18,23 @@ AFRAME.registerComponent('kotak-status', {
   init: function () {
     console.log('init status box')
     this.el.addEventListener('mousedown',function(e) {
-      const player = document.getElementById("camera")
       const self = this
+      const pi = Math.PI
       clearInterval(setint)
+      const player = document.getElementById('camera')
+      const object = e.target.getAttribute('position')
+      const positon = player.getAttribute('position')
+      const x = positon.x - object.x
+      const z = positon.z - object.z
       e.target.removeAttribute('dynamic-body')
       setint = setInterval(function () {
+        const player = document.getElementById('camera')
+        var radians = pi * (180-player.getAttribute('rotation').y)/180
         const positon = player.getAttribute('position')
-        $('#' + self.id).attr('position', `${positon.x} ${positon.y} ${positon.z-0.2}`)
+        const xPos = x * Math.cos(radians) - z * Math.sin(radians)
+        const zPos = x * Math.sin(radians) + z * Math.cos(radians)
+        e.target.setAttribute('rotation', `0 ${player.getAttribute('rotation').y} 0`)
+        $('#' + self.id).attr('position', ` ${xPos+positon.x} 1.5 ${zPos+positon.z}`)
       }, 50)
     })
     this.el.addEventListener('mouseup',function(e) {

@@ -1,11 +1,5 @@
-<a-text value = "bottom text" color="white" position="-3 0 -3"></a-text>
-
 <script>
   const name = "<%=name%>"
-  console.log(user_id)  
-  $('#buttons').on('click', function(e){
-    e.preventDefault()
-  });
   socket.on('get message', function (data) {
     var pesan = `${data.name}: ${data.msg}`
     const receiver_id = data.receiver_id
@@ -30,11 +24,11 @@
       var id_penerima = conversation.user_1 == user_id ? conversation.user_2 : conversation.user_1
       var camera = document.querySelector('#camera').getAttribute('position')
       const shape = 
-      `<a-entity id='${conversation_id}-chatpage' look-at="#camera" kotak-chat geometry="primitive: plane" class="clickable" material="color: #7BC8A4" position="${camera.x} ${camera.y} ${camera.z-3}"> ` + 
-        `<a-plane id="${conversation_id}-chatbox"` + 
-        `width="2" height="1" color="#7BC8A4" ></a-plane>` +
-        `<a-entity id="${conversation_id}-input" textarea="backgroundColor: blue; color: white; cols: 20; rows: 4;" class="clickable" geometry="primitive:plane;height:0.3; width:0.9" material="color: blue" position="0 -1 0" rotation="-30 0 0"></a-entity>` +
-        `<a-entity id="${conversation_id}-submit"conversation_id='${conversation_id}' user_penerima='${id_penerima}' class="clickable" geometry="primitive:plane;height:0.3; width:0.9" material="color: green" submit-chat position="1.2 -1 0" rotation="-30 0 0"></a-entity >` +
+      `<a-entity id='${conversation_id}-chatpage' look-at="#camera" geometry="primitive: plane"  material="color: #7BC8A4" position="${camera.x} ${camera.y} ${camera.z-3}"> ` + 
+        `<a-plane id="${conversation_id}-chatbox" class="clickable"` + 
+        `width="2" height="1" color="#7BC8A4" chat-drag></a-plane>` +
+        `<a-entity id="${conversation_id}-input" textarea="backgroundColor: blue; color: white; cols: 20; rows: 4;" class="clickable" geometry="primitive:plane;height:0.3; width:0.9" material="color: blue" position="0 -1 0" rotation="-30 0 0"  undrag-chat></a-entity>` +
+        `<a-entity id="${conversation_id}-submit"conversation_id='${conversation_id}' user_penerima='${id_penerima}' class="clickable" geometry="primitive:plane;height:0.3; width:0.9" material="color: green" submit-chat position="1.2 -1 0" rotation="-30 0 0"></a-entity>` +
         `</a-entity>`
       $('#pages').append(shape)
       axios.post('/get_chat', {
@@ -52,5 +46,4 @@
       })
     })
   }
-  
  </script>
