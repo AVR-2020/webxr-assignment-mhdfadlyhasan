@@ -1,79 +1,77 @@
 <!doctype html>
 <html>
   <%- include('../layout/header'); -%>
-  <script>
-    AFRAME.registerComponent('login-button', {
-    init: function () {
-      this.el.addEventListener('click',function(e) {
-        const name = document.getElementById('name-textarea').components.textarea.textarea.value
-        const password = document.getElementById('password-textarea').components.textarea.textarea.value
-        axios.post('/login', {
-          name: name,
-          password: password
-        }).then(result => {
-          console.log(result.data)
-          if(result.data == 'success')
-            location.reload();
-          else 
-            document.getElementById('login-title').setAttribute('text-geometry',`value: ${result.data}`)
-          
+  <body>
+    <script>
+      AFRAME.registerComponent('login-button', {
+      init: function () {
+        this.el.addEventListener('click',function(e) {
+          const name = document.getElementById('name-textarea').components.textarea.textarea.value
+          const password = document.getElementById('password-textarea').components.textarea.textarea.value
+          axios.post('/login', {
+            name: name,
+            password: password
+          }).then(result => {
+            console.log(result.data)
+            if(result.data == 'success')
+              location.reload();
+            else 
+              document.getElementById('login-title').setAttribute('text-geometry',`value: ${result.data}`)
+            
+          })
         })
-      })
-    }
-  })
-  AFRAME.registerComponent('register-button', {
-    init: function () {
-      this.el.addEventListener('click',function(e) {
-        const name = document.getElementById('name-textarearegister').components.textarea.textarea.value
-        const password = document.getElementById('password-textarearegister').components.textarea.textarea.value
-        axios.post('/register', {
-          name: name,
-          password: password
-        }).then(result => {
-          document.getElementById('register-title').setAttribute('text-geometry',`value: ${result.data}`)
+      }
+    })
+    AFRAME.registerComponent('register-button', {
+      init: function () {
+        this.el.addEventListener('click',function(e) {
+          const name = document.getElementById('name-textarearegister').components.textarea.textarea.value
+          const password = document.getElementById('password-textarearegister').components.textarea.textarea.value
+          axios.post('/register', {
+            name: name,
+            password: password
+          }).then(result => {
+            document.getElementById('register-title').setAttribute('text-geometry',`value: ${result.data}`)
+          })
         })
-      })
-    }
-  })
-  </script>
-  <a-scene id="pages">
-    <a-assets>
-      <img id="jalan" src="../assets/texture-jalan.jpg">
-      <a-asset-item id="tongsampah" src="../assets/scene.gltf"></a-asset-item>
-    </a-assets>
-    <a-camera id="camera">
-      <a-entity 
-        raycaster = "objects: #kotak, .clickable;"
-        cursor = "rayOrigin: mouse"
-        >
+      }
+    })
+    </script>
+    <a-scene id="pages">
+      <a-assets>
+        <img id="jalan" src="../assets/texture-jalan.jpg">
+        <a-asset-item id="tongsampah" src="../assets/scene.gltf"></a-asset-item>
+      </a-assets>
+      <a-camera id="camera">
+        <a-entity 
+          raycaster = "objects: #kotak, .clickable;"
+          cursor = "rayOrigin: mouse"
+          >
+        </a-entity>
+      </a-camera>
+      <a-entity id="login">
+        <a-entity id="login-title" text-geometry="value: Login;" material="color: #ff6600; shader: flat" position="-2 2.8843 -2.182" velocity=""></a-entity>
+        <a-entity id="login-form">
+          <a-entity id="name-textarea" textarea="backgroundColor: white; color: black; cols: 20; rows: 4; " position="0 2 -2" class="clickable"  geometry="primitive:plane;height:0.3; width:0.9" material="color: white; shader: flat"></a-entity>
+          <a-entity id="password-textarea" textarea="backgroundColor: white; color: black; cols: 20; rows: 4; " position="0 1.5 -2" class="clickable"  geometry="primitive:plane;height:0.3; width:0.9" material="color: white; shader: flat"></a-entity>
+          <a-text id="login-text" text="value: Login; align:center" position="1 1.7 -1.9"></a-text>
+          <a-box class="clickable" login-button="" color="blue" position="1 1.7 -2" material="" geometry="height:1; depth: 0.1"> </a-box>
+        </a-entity>
       </a-entity>
-    </a-camera>
-    <a-entity id="login">
-      <a-entity id="login-title" text-geometry="value: Login;" material="color: #ff6600; shader: flat" position="-2 2.8843 -2.182" velocity=""></a-entity>
-      <a-entity id="login-form">
-        <a-entity id="name-textarea" textarea="backgroundColor: white; color: black; cols: 20; rows: 4; " position="0 2 -2" class="clickable"  geometry="primitive:plane;height:0.3; width:0.9" material="color: white; shader: flat"></a-entity>
-        <a-entity id="password-textarea" textarea="backgroundColor: white; color: black; cols: 20; rows: 4; " position="0 1.5 -2" class="clickable"  geometry="primitive:plane;height:0.3; width:0.9" material="color: white; shader: flat"></a-entity>
-        <a-text id="login-text" text="value: Login; align:center" position="1 1.7 -1.9"></a-text>
-        <a-box class="clickable" login-button="" color="blue" position="1 1.7 -2" material="" geometry="height:1; depth: 0.1"> </a-box>
+      <a-entity position="4.43285 1.47088 0" rotation="0 -90 0" id="register">
+        <a-entity id="register-title" text-geometry="value: Register" position="-1 2 0" material="color:yellow; shader: flat"></a-entity>
+        <a-entity id="register-form" position="0 -2 0">
+          <a-entity id="name-textarearegister" textarea="backgroundColor: white; color: black; cols: 20; rows: 4; "  class="clickable" position="0 2.5 -0.1" geometry="primitive:plane;height:0.3; width:0.9" material="color: white;"></a-entity>
+          <a-entity id="password-textarearegister" textarea="backgroundColor: white; color: black; cols: 20; rows: 4; " position="0 2 -0.1 " class="clickable"  geometry="primitive:plane;height:0.3; width:0.9" material="color: white;"></a-entity>
+          <a-text id="login-text" text="value: Register; align:center" position="1 2.5 0.1"></a-text>
+          <a-box class="clickable" register-button="" color="blue" position="1 2.28431 0" material="" geometry="depth: 0.1"> </a-box>
+        </a-entity>
       </a-entity>
-    </a-entity>
-    <a-entity position="4.43285 1.47088 0" rotation="0 -90 0" id="register">
-      <a-entity id="register-title" text-geometry="value: Register" position="-1 2 0" material="color:yellow; shader: flat"></a-entity>
-      <a-entity id="register-form" position="0 -2 0">
-        <a-entity id="name-textarearegister" textarea="backgroundColor: white; color: black; cols: 20; rows: 4; "  class="clickable" position="0 2.5 -0.1" geometry="primitive:plane;height:0.3; width:0.9" material="color: white;"></a-entity>
-        <a-entity id="password-textarearegister" textarea="backgroundColor: white; color: black; cols: 20; rows: 4; " position="0 2 -0.1 " class="clickable"  geometry="primitive:plane;height:0.3; width:0.9" material="color: white;"></a-entity>
-        <a-text id="login-text" text="value: Register; align:center" position="1 2.5 0.1"></a-text>
-        <a-box class="clickable" register-button="" color="blue" position="1 2.28431 0" material="" geometry="depth: 0.1"> </a-box>
-      </a-entity>
-    </a-entity>
-    <a-plane material="src: #jalan;repeat:100 100; shader: flat" static-body rotation="-90 0 0" height="100" width="100" position="0 0 6.14603"></a-plane>
-      <a-box material="src: #jalan;repeat:2 2;"geometry="height: 5; width: 100" id="dinding" position="-5.31659 2.66083 -3.187" material=""></a-box>
-      <a-box material="src: #jalan;repeat:2 2;"geometry="height: 5; width: 100" id="dinding-4" position="5.15503 2.66083 0.43671" rotation="0 -90 0"></a-box>
-      <a-box material="src: #jalan;repeat:2 2; shader: flat" geometry="height: 100; width: 100;" id="dinding-6" position="-2.90418 5.95246 5.64194" rotation="90 0 0" material=""></a-box>  
-    <a-sky color="black"></a-sky>
-  </a-scene>
-      <!-- <a-light type="point" light="color: #ffffff" position="0 5 0" ></a-light> -->
-      <!-- <a-box light="color: #ffff; type: point" position="0 2 0 "></a-box> -->
-      <!-- <a-light type="ambient" color="#ffffff" intensity="0"></a-light>
-      <a-light type="directional" light="color: #039595" position="0 5 0"></a-light> -->
+      <a-plane material="src: #jalan;repeat:100 100; shader: flat" static-body rotation="-90 0 0" height="100" width="100" position="0 0 6.14603"></a-plane>
+        <a-box material="src: #jalan;repeat:2 2;"geometry="height: 5; width: 100" id="dinding" position="-5.31659 2.66083 -3.187" material=""></a-box>
+        <a-box material="src: #jalan;repeat:2 2;"geometry="height: 5; width: 100" id="dinding-4" position="5.15503 2.66083 0.43671" rotation="0 -90 0"></a-box>
+        <a-box material="src: #jalan;repeat:2 2; shader: flat" geometry="height: 100; width: 100;" id="dinding-6" position="-2.90418 5.95246 5.64194" rotation="90 0 0" material=""></a-box>  
+      <a-sky color="black"></a-sky>
+    </a-scene>
+  </body>
 </html>
