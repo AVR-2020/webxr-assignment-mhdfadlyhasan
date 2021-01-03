@@ -39,7 +39,7 @@
           pesan += `${element.user.name}: ${element.content}\n`
         })
         const chatText = 
-        `<a-text id='${conversation_id}-chattext' value ='${pesan}' align="center" position ='0 0 0.2' color="white" > </a-text> `
+        `<a-text id='${conversation_id}-chattext' value ='${pesan}' align="center" position ='0 0 0.25' color="white" > </a-text> `
         $(`#${conversation_id}-chatpage`).append(chatText)
       }).catch(error => {
         console.log(error)
