@@ -1,7 +1,7 @@
 module.exports = function get (http) {
   const io = require('socket.io')(http, {
     cors: {
-      origin: '*'
+      origin: 'https://protected-refuge-41458.herokuapp.com/'
     }
   })
   io.on('connection', (socket) => {
