@@ -55,7 +55,7 @@ const io = require('./utils/socket')(HttpServer)
 // })
 
 /* Listen */
-HttpServer.listen(process.env.PORT || 5000)
+HttpServer.listen(process.env.PORT || 3000)
 // httpsServer.listen(port, () => {
 //   console.log(`listening at http://localhost:${port}`)
 // })

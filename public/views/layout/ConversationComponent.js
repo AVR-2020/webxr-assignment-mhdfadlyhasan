@@ -30,7 +30,10 @@ AFRAME.registerComponent('spawn-chat-button', {
   init: function () {
     this.el.addEventListener('click', function (e) {
       const id_conversation = e.target.getAttribute('conversation_id')
-      spawnChat(id_conversation)
+      if(document.getElementById(id_conversation+'-chatpage')) {
+        console.log("exist")
+      }
+      else spawnChat(id_conversation)
     })
   }
 })

@@ -19,4 +19,4 @@ how to run
 8. npm start
 
 lumine biar semangat
-![alt text](/front-end/lumine.jpg)
+![alt text](/foto-berharga/lumine.jpg)
