@@ -3,14 +3,16 @@
   socket.on('get message', function (data) {
     var pesan = `${data.name}: ${data.msg}`
     const receiver_id = data.receiver_id
-    const conversation_id = data.conversation_id
-    if(document.getElementById(conversation_id+'-chatpage')) {
-      //exist
-      const chatText = document.getElementById(conversation_id+'-chattext')
-      $(`#${conversation_id}-chattext`).attr('value', $(`#${conversation_id}-chattext`).attr('value') + pesan + '\n' )
-    }
-    else {
-      spawnChat(conversation_id)
+    if(receiver_id == user_id){
+      const conversation_id = data.conversation_id
+      if(document.getElementById(conversation_id+'-chatpage')) {
+        //exist
+        const chatText = document.getElementById(conversation_id+'-chattext')
+        $(`#${conversation_id}-chattext`).attr('value', $(`#${conversation_id}-chattext`).attr('value') + pesan + '\n' )
+      }
+      else {
+        spawnChat(conversation_id)
+      }
     }
   })
   function spawnChat(conversation_id){
