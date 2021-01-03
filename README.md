@@ -1,3 +1,13 @@
+https://protected-refuge-41458.herokuapp.com/
+https://protected-refuge-41458.herokuapp.com/
+https://protected-refuge-41458.herokuapp.com/
+https://protected-refuge-41458.herokuapp.com/
+https://protected-refuge-41458.herokuapp.com/
+https://protected-refuge-41458.herokuapp.com/
+https://protected-refuge-41458.herokuapp.com/
+
+or, run locally
+
 how to run
 0. open this directory via your trusted ~visual studio code~ console
 1. npm install
