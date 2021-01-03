@@ -1,5 +1,4 @@
 // node server
-const port = 3000
 const Status = require('./routes/status')
 const User = require('./routes/user')
 const Follow = require('./routes/follow')
@@ -14,7 +13,6 @@ const cookieParser = require('cookie-parser')
 const session = require('express-session')
 const path = require('path')
 const http = require('http')
-global.connectedUsers = []
 // const fs =require('fs')
 // const dirCerfiticate = 'sslcert/'
 // const privateKey = fs.readFileSync(dirCerfiticate + '/server.key', 'utf8')
@@ -57,8 +55,7 @@ const io = require('./utils/socket')(HttpServer)
 // })
 
 /* Listen */
-HttpServer.listen(() => {
-})
+HttpServer.listen(process.env.PORT || 5000)
 // httpsServer.listen(port, () => {
 //   console.log(`listening at http://localhost:${port}`)
 // })
