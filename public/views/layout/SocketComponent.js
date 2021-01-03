@@ -1,5 +1,5 @@
 // registerAframeClickDragComponent(window.AFRAME);
-const socket = io.connect('localhost:3000')
+const socket = io.connect('protected-refuge-41458.herokuapp.com')
 socket.on('connect', function () {
   console.log('Connected')
   $('#page').show()
