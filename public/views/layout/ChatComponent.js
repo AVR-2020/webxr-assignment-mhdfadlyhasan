@@ -17,7 +17,8 @@ AFRAME.registerComponent('submit-chat', {
           conversation_id: id_conversation,
           name: name
         })
-        spawnChat(id_conversation)
+        const chatText = document.getElementById(id_conversation+'-chattext')
+        $(`#${id_conversation}-chattext`).attr('value', $(`#${id_conversation}-chattext`).attr('value') + name + ': ' + pesan + '\n')
         document.getElementById(`${id_conversation}-input`).components.textarea.textarea.value = ''
       })
     })
