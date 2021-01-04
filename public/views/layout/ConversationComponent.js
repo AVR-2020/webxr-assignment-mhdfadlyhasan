@@ -55,3 +55,25 @@ AFRAME.registerComponent('kotak-chat', {
     })
   }
 })
+function refreshSearch(result) {
+  var text = ''
+  var i = 1
+  $('#conversation_wall').empty()
+  if(result.length>0) {
+    result.forEach (function (result) {
+      if(result.id != user_id)
+      {
+        $('#conversation_wall').append(
+        `<a-entity position="0 ${i*0.3} 0">`+
+          `<a-box id="${result.id}-result" user_id="${result.id}" class="clickable" add-user-button width="1" height="0.2" depth="0.2"></a-box>` +
+          ` <a-text text="value: ${result.name}; align:center " position="0 0 0.1" color="black"></a-text>` +
+        `</a-entity>`
+        )
+        i+=1
+      }
+    })
+  }
+  else {
+    $('#conversation_wall').append('<a-text text="value: Ini Found!" ></a-text>')
+  }
+}

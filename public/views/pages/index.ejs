@@ -1,6 +1,10 @@
 <html>
+  <%- include('../layout/header'); -%>
+  <script>
+    const user_id = "<%=user_id%>"
+    const name = "<%=name%>"
+  </script>
   <body>
-    <%- include('../layout/header'); -%>
     <a-scene id="pages">
       <a-assets>
         <img id="jalan" src="/Assets/texture-jalan.jpg">
@@ -29,3 +33,7 @@
     </a-scene>
   </body>
 </html>
+
+<script>
+  refreshStatus ()
+</script>

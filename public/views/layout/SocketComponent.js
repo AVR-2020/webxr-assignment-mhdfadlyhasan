@@ -4,9 +4,6 @@ socket.on('connect', function () {
   console.log('Connected')
   $('#page').show()
 })
-// socket.on('chat message', function (data) {
-//   console.log(data + 'in footer')
-// })
 socket.on('disconnect', function () {
   console.log('dc')
   $('#page').hide()

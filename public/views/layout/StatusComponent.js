@@ -1,4 +1,3 @@
-var setint  = ''
 AFRAME.registerComponent('tong-sampah', {
   init: function () {
     this.el.addEventListener('collide', function (evt) {
@@ -46,7 +45,7 @@ AFRAME.registerComponent('kotak-status', {
 })
 AFRAME.registerComponent('send-status-button', {
   init: function () {
-    this.el.addEventListener('click',function(e) {
+    this.el.addEventListener('click', function (e) {
       const content = document.getElementById('status-textarea').components.textarea.textarea.value
       axios.post('status', {
         content: content
@@ -56,3 +55,28 @@ AFRAME.registerComponent('send-status-button', {
     })
   }
 })
+AFRAME.registerComponent('refresh-button', {
+  init: function () {
+    this.el.addEventListener('click', function (e) {
+      refreshStatus()
+    })
+  }
+})
+function refreshStatus () {
+  axios.get('/get_status')
+    .then(object => {
+      var text = ''
+      var i = 1
+      $('#wall_content').empty()
+      object.data.forEach (function (status) {
+        $('#wall_content').append(
+          `<a-entity kotak-status ${status.user.id == user_id ? 'class="clickable"': ''}` +
+          `sender="${status.user.id}" id_status=${status.id} id="${status.id}-statuscontent"` + 
+            `${status.user.id == user_id ? 'material = "color:green"' : 'material = "color:blue"'}` +
+            `geometry="primitive: plane;height:0.2; width:2;" position="0 ${i*0.3} -2" text="color:white; align: center; value:${status.user.name} ${status.content};">` +
+          `</a-entity>`
+        )
+        i += 1
+      })
+    })
+}
