@@ -6,6 +6,7 @@ https://protected-refuge-41458.herokuapp.com/
 https://protected-refuge-41458.herokuapp.com/
 https://protected-refuge-41458.herokuapp.com/
 
+if you cant enter the app after log in, try to refresh the page 5 times.
 or, run locally
 
 how to run
