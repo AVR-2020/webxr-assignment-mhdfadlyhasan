@@ -6,6 +6,12 @@ const connectionString = process.env.DATABASE_URL
 const sequelize = new Sequelize(connectionString, {
   define: {
     timestamps: false
+  },
+  dialectOptions: {
+    ssl: {
+      require: true,
+      rejectUnauthorized: false
+    }
   }
 })
 try {
